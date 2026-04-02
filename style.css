@@ -1,0 +1,196 @@
+
+body {
+    font-family: sans-serif;
+}
+
+button {
+    font-family: sans-serif;
+}
+
+h1 {
+    text-align: center;
+   }
+
+#hints{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#hints-cont{
+    display: flex;
+    align-items: flex-end;
+}
+
+#hints-cont h2{
+    margin: 0;
+}
+
+
+#hanBox{
+    border: 2px solid ButtonBorder;
+    border-radius: 1rem;
+    height: 2.5rem;
+    width: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+#fuBox{
+    border: 2px solid ButtonBorder;
+    border-radius: 1rem;
+    height: 2rem;
+    width: 3rem;
+    margin-left: .5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+#dealrow{
+    display: flex;
+    margin-top: .8rem;
+    border-radius: 1rem;
+    background-color: teal;
+}
+
+#tsumorow{
+    display: flex;
+    margin: .5rem;
+    border-radius: 1rem;
+    background-color: chocolate;
+}
+
+.greyed {
+    color: GrayText;
+    background-color: Canvas;
+}
+
+.lit{
+    border: 2px solid gainsboro;
+}
+
+.flagBox{
+    border: 2px solid ButtonBorder;
+    border-radius: 1rem;
+    height: 2rem;
+    width: 6rem;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#dealFlag{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left-width: 1px;
+}
+
+#nonFlag {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right-width: 1px;
+
+}
+
+#tsumoFlag{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left-width: 1px;
+}
+
+#ronFlag{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right-width: 1px;
+
+}
+
+#score{
+    display: flex;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: .5rem;
+    align-items: center;
+}
+
+#pays{
+    border: 2px solid buttonborder;
+    border-radius: 1rem;
+    height: 2.5rem;
+    width: 6.5rem;
+    margin-left: .5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#dealerPays{
+    border: 2px solid buttonborder;
+    border-radius: 1rem;
+    height: 2rem;
+    width: 5rem;
+    margin-left: .5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+}
+
+#keyboard-cont {
+  display: flex;
+  align-items: center;
+  font-size: 0;
+}
+
+.keyboard-button {
+  font-size: 1rem;
+  font-weight: 700;
+  padding: .5rem;
+  margin: .2rem;
+  cursor: pointer;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+#zeroBtn{
+    width:max;
+}
+
+#keyboard{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#enterBtn {
+    width: auto;
+    height: auto;
+    padding: 2rem .5rem;
+    margin-left: .6rem;
+} 
+
+#zeroBtn{
+    width: 5.4rem;
+    height: auto;
+}
+
+#body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+body {
+  background-color: Canvas;
+  color: CanvasText;
+  color-scheme: dark;
+}
