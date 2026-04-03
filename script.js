@@ -1,104 +1,103 @@
-//score will be represented as: han, fu, tsumo (boolean), dealer (boolean, math impact only, not logic)
+//List of han possible
 const hanList = [
-    //Basic Shit - Requires Fu
-    1,
-    2,
-    3,
-    4,
+    //Base - Require Fu
+    1,2,3,4,
     //Mangan
     5,
     //Haneman
-    6,
-    // 7,
-    // //Baiman
-    // 8,
-    // 9,
-    // 10,
-    // //Sanbaiman
-    // 11,
-    // 12,
-    // //Yakuman
-    // 13
+    6,7,
+    //Baiman
+    8,9,10,
+    //Sanbaiman
+    11,12,
+    //Yakuman
+    13
 ]
+//List of fu possible
 const fuList = [
-    20,
-    25, //Chiitoitsu
-    30,
-    40,
-    // 50,
-    // 60,
-    // 70,
-    // 80,
-    // 90,
-    // 100,
-    // 110
+    20,25,30,40,50,60,70,80,90,100,110
 ]
-// const hanListWeighted = [
-//     //Basic - Requires Fu
-//     // 1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-//     // 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
-//     // 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
-//     // 4,4,4,4,4,4,4,4,4,4,4,4,4,4,
-//     //Mangan
-//     5,5,5,5,5,5,5,
-//     //Haneman
-//     6,6,
-//     7,7,
-//     //Baiman
-//     8,
-//     9,
-//     10,
-//     //Sanbaiman
-//     11,
-//     12,
-//     //Yakuman
-//     13
-// ]
-// const fuListWeighted = [
-//     20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
-//     25,25,25,25,25,25, 
-//     30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,
-//     40,40,40,40,40,40,40,40,
-//     50,
-//     60,
-//     70,
-//     80,
-//     90,
-//     100,
-//     110
-// ]
+
+//Lists with duplicates for weighted odds to practice the common values more
+const hanListWeighted = [
+    //Basic - Requires Fu
+    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+    3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+    4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+    //Mangan
+    5,5,5,5,5,5,
+    //Haneman
+    6,6,
+    7,7,
+    //Baiman
+    8,
+    9,
+    10,
+    //Sanbaiman
+    11,
+    12,
+    //Yakuman
+    13
+]
+const fuListWeighted = [
+    20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
+    25,25,25,25,25,25, 
+    30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,
+    40,40,40,40,40,40,40,40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100,
+    110
+]
 
 //Impossible values array contains mini arrays of [Han,Fu,Tsumo]
 const impossibleValues = [
-    //1 han cannot be 20 or 25
+    //Pinfu tsumo (only source of 20 fu) is minimum 2 han 
     [1,20,true],
-    [1,25,true],
-    [1,25,false],
-    //Chiitoitsu tsumo cannot be 2 han
-    [2,25,true],
-    //20 Fu only possible with tsumo
+    //20 Fu not possible with ron
     [1,20,false],
     [2,20,false],
     [3,20,false],
     [4,20,false]
+    //Chiitoitsu (only source of 25 fu) is minimum 2 han 
+    [1,25,true],
+    [1,25,false],
+    //And chiitoitsu tsumo would be 3 han 
+    [2,25,true], 
 ];
 
+//The four primary hint variables and the list that will store all hints generated
 var han;
 var fu;
 var dealer;
 var tsumo;
-var scoreBox;
-var settinghints;
 let hintList = [];
-let hintMode = "list";
-let iHint = 0;
-let streak = 0;
-let nextDigit = 0;
+
+//Flag used so dealer pay amount box only animates once
+var settingHints;
+
+//References the object of the current score box being typed in
+var scoreBox;
+//Flag that switches the scorebox variable between boxes
 let currentGuess = 0;
+//Scoreboxes
 let pays = document.getElementById("pays");
 let dealerPays = document.getElementById("dealerPays");
 let box2Enabled = false;
 
+// settings flags
+let hintMode = "list";
+
+// counters
+let iHint = 0;
+let streak = 0;
+let nextDigit = 0;
+
+//Settings for the answer check popups
 toastr.options = {
   "closeButton": false,
   "debug": false,
@@ -117,8 +116,9 @@ toastr.options = {
   "hideMethod": "fadeOut"
 }
 
-function startGame(){
 
+
+function startGame(){
     console.log("I know you're reading this, please don't look at my code I know it's not pretty, I'm a mainframe dev not a web dev")
     if (hintMode == "list"){
         generateHintList()
@@ -206,7 +206,7 @@ function moveHints(han,fu,dealer,tsumo){
     currentGuess = 0
     pays.textContent = ""
     dealerPays.textContent = ""
-    settinghints = true
+    settingHints = true
 
     //grey out dealer pays box
     if (dealer || !tsumo){
@@ -273,10 +273,10 @@ function toggleLitScore(){
         animateCSS(pays, 'pulse','0.5s')
         if (box2Enabled){
             dealerPays.style.borderColor = 'buttonborder'
-            if (settinghints) {
+            if (settingHints) {
                 setTimeout(()=> {
                     animateCSS(dealerPays, 'pulse','0.5s')
-                    settinghints = false
+                    settingHints = false
                 }, 200)
             }
         }

@@ -1,15 +1,45 @@
-
-body {
+html {
+    background-color: Canvas;
+    color: CanvasText;
+    color-scheme: dark;
     font-family: sans-serif;
 }
+
+body{
+    margin:0;
+}
+
+#bar{
+    display: flex;
+    justify-content: right;
+    margin: 1.5rem;
+    font-size: 2rem;
+}
+
+#bar i{
+    margin: .5rem;
+    cursor: pointer;
+}
+
+#supportIcon{
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+}
+
+#content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 60vh;
+    width: auto;
+}
+
 
 button {
     font-family: sans-serif;
 }
-
-h1 {
-    text-align: center;
-   }
 
 #hints{
     display: flex;
@@ -118,7 +148,9 @@ h1 {
     font-size: 1rem;
     font-weight: 700;
     margin: .5rem;
+    margin-right: 2rem;
     align-items: center;
+    justify-content: center;
 }
 
 #pays{
@@ -180,17 +212,4 @@ h1 {
 #zeroBtn{
     width: 5.4rem;
     height: auto;
-}
-
-#body{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}
-
-body {
-  background-color: Canvas;
-  color: CanvasText;
-  color-scheme: dark;
 }
