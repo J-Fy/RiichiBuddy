@@ -88,6 +88,7 @@ var fu;
 var dealer;
 var tsumo;
 var scoreBox;
+var settinghints;
 let hintList = [];
 let hintMode = "list";
 let iHint = 0;
@@ -117,6 +118,7 @@ toastr.options = {
 }
 
 function startGame(){
+
     console.log("I know you're reading this, please don't look at my code I know it's not pretty, I'm a mainframe dev not a web dev")
     if (hintMode == "list"){
         generateHintList()
@@ -192,26 +194,21 @@ function newRandomHint() {
 }
 
 function moveHints(han,fu,dealer,tsumo){
+    //pull the divs from the document
     let hanBox = document.getElementById("hanBox")
     let fuBox = document.getElementById("fuBox")
     let dealFlag = document.getElementById("dealFlag")
     let nonFlag = document.getElementById("nonFlag")
     let tsumoFlag = document.getElementById("tsumoFlag")
     let ronFlag = document.getElementById("ronFlag")
-    if (dealer){
-        nonFlag.classList.add('greyed')
-        dealFlag.classList.remove('greyed')
-    } else {
-        dealFlag.classList.add('greyed')
-        nonFlag.classList.remove('greyed')
-    }
-    if (tsumo){
-        ronFlag.classList.add('greyed')
-        tsumoFlag.classList.remove('greyed')
-    } else {
-        tsumoFlag.classList.add('greyed')
-        ronFlag.classList.remove('greyed')         
-    }
+
+    //initialize values
+    currentGuess = 0
+    pays.textContent = ""
+    dealerPays.textContent = ""
+    settinghints = true
+
+    //grey out dealer pays box
     if (dealer || !tsumo){
         dealerPays.style.borderColor = "rgb(44, 44, 44)"
         box2Enabled = false
@@ -219,31 +216,75 @@ function moveHints(han,fu,dealer,tsumo){
         box2Enabled = true
         dealerPays.style.borderColor = 'ButtonBorder'
     }
-    hanBox.textContent = han
-    fuBox.textContent = fu
-    if (han > 4){
+
+    //animate each item as it populates
+    setTimeout(()=> {
+        hanBox.textContent = han
+        animateCSS(hanBox, 'pulse','0.5s')
+    }, 200)
+
+    setTimeout(()=> {
+        if (han > 4){
         let fuText = document.getElementById("fuText")
         let fuBox = document.getElementById("fuBox")
         fuBox.style.borderColor = "GrayText"
         fuBox.style.color = "GrayText"
         fuText.style.color = "GrayText"
-    }
-    currentGuess = 0
-    pays.textContent = ""
-    dealerPays.textContent = ""
-    toggleLitScore()
+        } else {
+            fuBox.textContent = fu
+        }
+        animateCSS(fuBox, 'pulse','0.5s')
+    }, 400)
+
+    setTimeout(()=> {
+        if (dealer){
+            nonFlag.classList.add('greyed')
+            dealFlag.classList.remove('greyed')
+            animateCSS(dealFlag, 'pulse','0.5s')
+        } else {
+            dealFlag.classList.add('greyed')
+            nonFlag.classList.remove('greyed')
+            animateCSS(nonFlag, 'pulse','0.5s')
+        }
+        
+    }, 600)
+    
+    setTimeout(()=> {
+        if (tsumo){
+            ronFlag.classList.add('greyed')
+            tsumoFlag.classList.remove('greyed')
+            animateCSS(tsumoFlag, 'pulse','0.5s')
+        } else {
+            tsumoFlag.classList.add('greyed')
+            ronFlag.classList.remove('greyed')
+            animateCSS(ronFlag, 'pulse','0.5s')
+        }
+    }, 800)
+
+    setTimeout(()=> {
+        toggleLitScore()
+    }, 1000)
+
 }
 
 function toggleLitScore(){
     if (currentGuess == 0) {
         pays.style.borderColor = 'gainsboro'
+        animateCSS(pays, 'pulse','0.5s')
         if (box2Enabled){
             dealerPays.style.borderColor = 'buttonborder'
+            if (settinghints) {
+                setTimeout(()=> {
+                    animateCSS(dealerPays, 'pulse','0.5s')
+                    settinghints = false
+                }, 200)
+            }
         }
     } else {
         pays.style.borderColor = 'buttonborder'
         if (box2Enabled){
             dealerPays.style.borderColor = 'gainsboro'
+            animateCSS(dealerPays, 'pulse','0.5s')
         }
     }
 }
@@ -290,10 +331,40 @@ document.addEventListener("keyup", (e) => {
     }
 
     let pressedKey = String(e.key)
+    let k = null
+    //animate button
+    switch (pressedKey){
+        case "Backspace":
+            k = document.getElementById('delBtn')
+            break
+        // case "Enter":
+        //     k = document.getElementById('enterBtn')
+        //     break
+        case "0":
+            k = document.getElementById('zeroBtn')
+            break
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+        case "8":
+        case "9":
+            k = document.getElementById("btn" + pressedKey)
+            break
+    }
+    if (k != null){
+        animateCSS(k,"pulse")
+    }
+
+    //Delete
     if (pressedKey === "Backspace") {
         deleteDigit(scoreBox)
         return
     }
+
 
     if (pressedKey === "Enter") {
         checkGuess()
@@ -416,25 +487,32 @@ function checkGuess() {
     newHint()
 }
 
-// const animateCSS = (element, animation, prefix = 'animate__') =>
-//   // We create a Promise and return it
-//   new Promise((resolve, reject) => {
-//     const animationName = `${prefix}${animation}`;
-//     // const node = document.querySelector(element);
-//     const node = element
-//     node.style.setProperty('--animate-duration', '0.3s');
+const animateCSS = (element, animation, duration, prefix = 'animate__') =>
+  // We create a Promise and return it
+  new Promise((resolve, reject) => {
+    if (duration == undefined){
+        duration = '0.1s'
+    }
+    const animationName = `${prefix}${animation}`;
+    // const node = document.querySelector(element);
+    const node = element
+    node.style.setProperty('--animate-duration', String(duration));
 
-//     node.classList.add(`${prefix}animated`, animationName);
+    node.classList.add(`${prefix}animated`, animationName);
+    
 
-//     // When the animation ends, we clean the classes and resolve the Promise
-//     function handleAnimationEnd(event) {
-//       event.stopPropagation();
-//       node.classList.remove(`${prefix}animated`, animationName);
-//       resolve('Animation ended');
-//     }
+    // When the animation ends, we clean the classes and resolve the Promise
+    function handleAnimationEnd(event) {
+      event.stopPropagation();
+      node.classList.remove(`${prefix}animated`, animationName);
+      resolve('Animation ended');
+    }
 
-//     node.addEventListener('animationend', handleAnimationEnd, {once: true});
-// });
+    node.addEventListener('animationend', handleAnimationEnd, {once: true});
+});
 
-
+nonFlag.classList.add('greyed');
+dealFlag.classList.add('greyed');
+ronFlag.classList.add('greyed');
+tsumoFlag.classList.add('greyed');
 startGame();
