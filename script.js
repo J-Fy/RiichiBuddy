@@ -56,14 +56,14 @@ const fuListWeighted = [
 
 //Impossible values array contains mini arrays of [Han,Fu,Tsumo]
 const impossibleValues = [
-    //Pinfu tsumo (only source of 20 fu) is minimum 2 han 
+    //Pinfu tsumo (the only source of 20 fu) is 2 han 
     [1,20,true],
     //20 Fu not possible with ron
     [1,20,false],
     [2,20,false],
     [3,20,false],
-    [4,20,false]
-    //Chiitoitsu (only source of 25 fu) is minimum 2 han 
+    [4,20,false],
+    //Chiitoitsu (the only source of 25 fu) is 2 han 
     [1,25,true],
     [1,25,false],
     //And chiitoitsu tsumo would be 3 han 
@@ -85,17 +85,35 @@ var scoreBox;
 //Flag that switches the scorebox variable between boxes
 let currentGuess = 0;
 //Scoreboxes
-let pays = document.getElementById("pays");
-let dealerPays = document.getElementById("dealerPays");
 let box2Enabled = false;
+const pays = document.getElementById("pays");
+const dealerPays = document.getElementById("dealerPays");
+const popup = document.getElementById("incorrectPopup");
+const settingsDialog = document.getElementById("settings");
+const heartDialog = document.getElementById("support");
+const popupCloseBtn = document.getElementById("closePopup");
+
 
 // settings flags
-let hintMode = "list";
+let minHan = 1;
+let maxHan = 13;
+let minFu = 20;
+let maxFu = 110;
+let nonDealerEnabled = true;
+let dealerEnabled = true;
+let ronEnabled = true;
+let tsumoEnabled = true;
+let weightedMode = true; //Weights hints based on rarity
+let hintMode = 'list'; //list or trueRandom
+let randomMode = true; //Shuffles list before iterating
+let kiriageMode = false; //Rounds some values up to mangan
+let shorthandMode = false; //Remove 00 from scores
+let quickMode = false; //Checks answers as you type
+let reverseMode = false; //Provides a score as hint, user enters han & fu
 
 // counters
 let iHint = 0;
 let streak = 0;
-let nextDigit = 0;
 
 //Settings for the answer check popups
 toastr.options = {
@@ -120,9 +138,7 @@ toastr.options = {
 
 function startGame(){
     console.log("I know you're reading this, please don't look at my code I know it's not pretty, I'm a mainframe dev not a web dev")
-    if (hintMode == "list"){
-        generateHintList()
-    }
+    generateHintList()
     newHint()
 }
 
@@ -134,7 +150,6 @@ function generateHintList(){
             if (hanList[x] > 4) {
                 fu = ''
                 if (y > 0){
-                    console.log("buh")
                     break
                 }
             }
@@ -161,11 +176,12 @@ function addHint(hint) {
 }
 
 function newHint() {
+    popup.close()
     switch(hintMode) {
         case "list":
             nextListHint()
             break
-        case "random":
+        case "trueRandom":
             newRandomHint()
             break
     }
@@ -375,7 +391,7 @@ document.addEventListener("keyup", (e) => {
     if (!found || found.length > 1) {
         return
     } else {
-        if (scoreBox.textContent.length != 6){
+        if (scoreBox.textContent.length != 5){
             insertDigit(pressedKey,scoreBox)
         }
     }
@@ -387,7 +403,6 @@ function insertDigit(pressedKey,scoreBox){
         scoreBox.textContent += pressedKey
     }
     if (scoreBox.textContent.length == 5){
-        scoreBox.textContent = scoreBox.textContent.substring(0,2) + "," + scoreBox.textContent.substring(2,5)
         if (box2Enabled){
             currentGuess = 1
             toggleLitScore()
@@ -476,16 +491,20 @@ function checkGuess() {
     if (correct) {
         streak += 1
         toastr.success("Answer correct! Streak: " + streak)
+        newHint()
     } else {
-        let message = "Incorrect. The answer was " + answer 
+        let ansText = document.getElementById("correctAns")
+        let message = answer 
         if (box2Enabled) {
             message += " and " + answer2
         }
-        alert(message)
+        ansText.textContent = message
+        popup.showModal()
         streak = 0
     }
-    newHint()
 }
+
+popupCloseBtn.addEventListener('click', () => newHint());
 
 const animateCSS = (element, animation, duration, prefix = 'animate__') =>
   // We create a Promise and return it

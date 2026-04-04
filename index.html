@@ -17,9 +17,11 @@
 </head>
 <body>
     <div id="bar">
-        <i id="supportIcon" class="fa fa-heart"></i>
+        <i id="heartIcon" class="fa fa-heart" style="visibility: hidden;"></i>
         <i id="settingsIcon" class="fa fa-gear"></i>
     </div>
+    <dialog class="dialogs" id="settings">settings window</dialog>
+    <dialog class="dialogs" id="support">support window</dialog>
     <div id="content">
         <div id="hints">
             <div id="hints-cont">
@@ -70,6 +72,14 @@
                 </div>
             </div>
         </div>
+        <dialog class="dialogs" id="incorrectPopup">
+            <p class="dialogHeader">Nope!</p>
+            <div class="dialogContainer">
+                <div>the correct answer was</div>
+                <div id = "correctAns"></div>
+            </div>
+            <button class="closeBtn" id="closePopup">close</button>
+        </dialog>
     </div>
 
 </body>

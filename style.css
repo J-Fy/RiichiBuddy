@@ -213,3 +213,65 @@ button {
     width: 5.4rem;
     height: auto;
 }
+
+.dialogs{
+    border-radius: .5rem;
+    height: 22rem;
+    width: 15rem;
+    background-color:darkslategrey;
+    border: .2rem solid beige;
+    text-align: center;
+    align-items: end;
+    font-weight: 700;
+    border:0;
+
+    scale: 1;
+    opacity: 1;
+    transition: all 200ms;
+
+    @starting-style{
+        opacity: 0;
+        scale: .8;
+    }
+}
+
+.dialogHeader{
+    margin: 0;
+    font-size: large;
+}
+
+.dialogContainer{
+    margin: .5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.dialogs button{
+    font-weight: 700;
+    padding: .3rem;
+    border:0;
+    border-radius: .5rem;
+    background-color: grey;
+    &:hover {
+        background-color: lightgray;
+    }
+}
+
+#incorrectPopup{
+    background-color:rgb(110, 11, 11);
+    width: 15rem;
+    height: 6.4rem;
+
+}
+
+#settingsIcon{
+    &:hover {
+        color: silver
+    }
+}
+
+#heartIcon{
+    &:hover {
+        color: rgb(204, 69, 69)
+    }
+}
