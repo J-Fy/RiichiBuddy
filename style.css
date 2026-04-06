@@ -1,3 +1,4 @@
+/* Some defaults */
 html {
     background-color: Canvas;
     color: CanvasText;
@@ -8,6 +9,8 @@ html {
 body{
     margin:0;
 }
+
+/* Icons at top of screen */
 
 #bar{
     display: flex;
@@ -21,10 +24,19 @@ body{
     cursor: pointer;
 }
 
-#supportIcon{
-    font-size: 1.6rem;
+#settingsIcon{
+    &:hover {
+        color: silver
+    }
+}
+
+#heartIcon{
+    font-size: 1.5rem;
     display: flex;
     align-items: center;
+    &:hover {
+        color: rgb(204, 69, 69)
+    }
 }
 
 #content{
@@ -215,16 +227,11 @@ button {
 }
 
 .dialogs{
-    border-radius: .5rem;
-    height: 22rem;
-    width: 15rem;
-    background-color:darkslategrey;
-    border: .2rem solid beige;
+    background-color: transparent;
     text-align: center;
     align-items: end;
     font-weight: 700;
-    border:0;
-
+    border: 0;
     scale: 1;
     opacity: 1;
     transition: all 200ms;
@@ -232,6 +239,39 @@ button {
     @starting-style{
         opacity: 0;
         scale: .8;
+    }
+}
+
+.dialogContent{
+    border-radius: .5rem;
+    height: 18rem;
+    width: 14rem;
+    padding: 1rem;
+    background-color: rgb(39, 56, 110);
+    position: relative;
+}
+
+.dialogX{
+    font-size: 1.7rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 2rem;
+    position: absolute;
+    right: -1rem;
+    top: -1rem;
+}
+
+.donate{
+    margin: 1rem;
+    margin-top: 2rem;
+    background-color: white;
+    border-radius: 2rem;
+    height: 4rem;
+    display: flex;
+    justify-content: center;
+
+    &:hover{
+        background-color: gold;
     }
 }
 
@@ -250,28 +290,91 @@ button {
     font-weight: 700;
     padding: .3rem;
     border:0;
-    border-radius: .5rem;
-    background-color: grey;
+    background-color: rgb(53, 98, 117);
     &:hover {
-        background-color: lightgray;
+        background-color: rgb(96, 150, 173);
     }
+}
+
+#closePopup{
+    border-radius: .5rem;
 }
 
 #incorrectPopup{
     background-color:rgb(110, 11, 11);
     width: 15rem;
     height: 6.4rem;
-
+    border-radius: .5rem;
 }
 
-#settingsIcon{
-    &:hover {
-        color: silver
-    }
+/* Focus-visible prevents weird highlight
+when opening the dialogs */
+
+a:focus-visible{
+    outline: none;
 }
 
-#heartIcon{
-    &:hover {
-        color: rgb(204, 69, 69)
-    }
+.dialogX:focus-visible {
+    outline: none;
+}
+
+/* SETTINGS TOGGLES */
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+  margin-right: .5rem;
+}
+
+.toggle input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #1b1b1b;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #FFF;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: rgb(103, 198, 241);
+}
+
+input:checked + .slider:before {
+  transform: translateX(16px);
+}
+
+.settingPanel{
+    display: flex;
+    align-items: center;
+    margin-bottom: .3rem;
+}
+
+.settingPanel p{
+    margin: 0;
+}
+
+dialog h2 {
+    margin: .5rem;
+    margin-top: 0;
 }

@@ -17,11 +17,74 @@
 </head>
 <body>
     <div id="bar">
-        <i id="heartIcon" class="fa fa-heart" style="visibility: hidden;"></i>
+        <i id="heartIcon" class="fa fa-heart"></i>
         <i id="settingsIcon" class="fa fa-gear"></i>
     </div>
-    <dialog class="dialogs" id="settings">settings window</dialog>
-    <dialog class="dialogs" id="support">support window</dialog>
+    <dialog class="dialogs" id="settings">
+        <div class="dialogContent">
+            <h2>Settings</h2>
+            <div class="settingPanel">
+                <label class="toggle">
+                    <input type="checkbox" checked/>
+                    <span class="slider"></span>
+                </label>
+                <p>Weighted odds</p>
+            </div>
+            <div class="settingPanel">
+                <label class="toggle">
+                    <input type="checkbox" checked/>
+                    <span class="slider"></span>
+                </label>
+                <p>Random order</p>
+            </div>
+            <div class="settingPanel">
+                <label class="toggle">
+                    <input type="checkbox"/>
+                    <span class="slider"></span>
+                </label>
+                <p>Kiriage</p>
+            </div>
+            <div class="settingPanel">
+                <label class="toggle">
+                    <input type="checkbox"/>
+                    <span class="slider"></span>
+                </label>
+                <p>Shorthand</p>
+            </div>
+            <div class="settingPanel">
+                <label class="toggle">
+                    <input type="checkbox"/>
+                    <span class="slider"></span>
+                </label>
+                <p>Autocheck</p>
+            </div>
+            <div class="settingPanel">
+                <label class="toggle">
+                    <input type="checkbox"/>
+                    <span class="slider"></span>
+                </label>
+                <p>Reverse mode</p>
+            </div>
+            <button class="dialogX" id="closeSettings">&times;</button>
+        </div>
+    </dialog>
+    <dialog class="dialogs" id="support">
+        <div class="dialogContent">
+            <h3>Enjoy this project?</h3>
+            <p>Help me fund an autotable :)</p>
+            <a href="https://paypal.me/JJFunky">
+                <div class="donate">
+                    <img src="images/PP.svg" width="80%" alt="PayPal logo">
+                </div>
+            </a>
+            <a href="https://venmo.com/code?user_id=3424604714434560145&created=1775287780">
+                <div class="donate">
+                    <img src="images/V.svg" width="80%" alt="Venmo logo">
+                </div>
+            </a>
+            <button class="dialogX" id="closeSupport">&times;</button>
+        </div>
+    </dialog> 
     <div id="content">
         <div id="hints">
             <div id="hints-cont">
@@ -31,12 +94,12 @@
                 <h2 id="fuText">Fu</h2>
             </div>
             <div id="dealrow">
-                <div class="flagBox" id="nonFlag"><p>Non-Dealer</p></div>
-                <div class="flagBox" id="dealFlag"><p>Dealer</p></div>
+                <div class="flagBox greyed" id="nonFlag"><p>Non-Dealer</p></div>
+                <div class="flagBox greyed" id="dealFlag"><p>Dealer</p></div>
             </div>
             <div id="tsumorow">
-                <div class="flagBox" id="ronFlag"><p>Ron</p></div>
-                <div class="flagBox" id="tsumoFlag"><p>Tsumo</p></div>
+                <div class="flagBox greyed" id="ronFlag"><p>Ron</p></div>
+                <div class="flagBox greyed" id="tsumoFlag"><p>Tsumo</p></div>
             </div>
         </div>
         <div id="score">

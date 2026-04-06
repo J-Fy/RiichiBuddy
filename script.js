@@ -88,13 +88,29 @@ let currentGuess = 0;
 let box2Enabled = false;
 const pays = document.getElementById("pays");
 const dealerPays = document.getElementById("dealerPays");
+
+//Dialogs
+//failed guess popup
 const popup = document.getElementById("incorrectPopup");
-const settingsDialog = document.getElementById("settings");
-const heartDialog = document.getElementById("support");
 const popupCloseBtn = document.getElementById("closePopup");
+popupCloseBtn.addEventListener('click', () => newHint());
+
+//Gear icon - settings
+const settingsBtn = document.getElementById("settingsIcon")
+const settingsDialog = document.getElementById("settings");
+const settingsCloseBtn = document.getElementById("closeSettings");
+settingsBtn.addEventListener('click', () => settingsDialog.showModal())
+settingsCloseBtn.addEventListener('click', () => settingsDialog.close());
+
+//Heart icon - donate dialog
+const heartBtn = document.getElementById("heartIcon")
+const heartDialog = document.getElementById("support");
+const heartCloseBtn = document.getElementById("closeSupport");
+heartBtn.addEventListener('click', () => heartDialog.showModal())
+heartCloseBtn.addEventListener('click', () => heartDialog.close());
 
 
-// settings flags
+//Settings
 let minHan = 1;
 let maxHan = 13;
 let minFu = 20;
@@ -110,6 +126,7 @@ let kiriageMode = false; //Rounds some values up to mangan
 let shorthandMode = false; //Remove 00 from scores
 let quickMode = false; //Checks answers as you type
 let reverseMode = false; //Provides a score as hint, user enters han & fu
+let reloadHints = false; //If certain settings were changed, reload hints
 
 // counters
 let iHint = 0;
@@ -137,7 +154,7 @@ toastr.options = {
 
 
 function startGame(){
-    console.log("I know you're reading this, please don't look at my code I know it's not pretty, I'm a mainframe dev not a web dev")
+    console.log("I know you're reading this, please don't judge my ugly code. I'm a mainframe dev not a web dev")
     generateHintList()
     newHint()
 }
@@ -195,7 +212,8 @@ function nextListHint() {
     dealer = hintList[iHint][3]
     iHint ++
     if (iHint == hintList.length){
-        alert("You've reached the end of the options")
+        iHint = 0
+        generateHintList()
     }
 }
 
@@ -233,6 +251,7 @@ function moveHints(han,fu,dealer,tsumo){
         dealerPays.style.borderColor = 'ButtonBorder'
     }
 
+    // #TODO : pause other actions while animating goes, or cancel if support window is open
     //animate each item as it populates
     setTimeout(()=> {
         hanBox.textContent = han
@@ -504,8 +523,6 @@ function checkGuess() {
     }
 }
 
-popupCloseBtn.addEventListener('click', () => newHint());
-
 const animateCSS = (element, animation, duration, prefix = 'animate__') =>
   // We create a Promise and return it
   new Promise((resolve, reject) => {
@@ -530,8 +547,9 @@ const animateCSS = (element, animation, duration, prefix = 'animate__') =>
     node.addEventListener('animationend', handleAnimationEnd, {once: true});
 });
 
-nonFlag.classList.add('greyed');
-dealFlag.classList.add('greyed');
-ronFlag.classList.add('greyed');
-tsumoFlag.classList.add('greyed');
+
+
+
+
+
 startGame();
