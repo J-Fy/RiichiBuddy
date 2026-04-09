@@ -523,6 +523,9 @@ function checkGuess() {
     }
 }
 
+
+
+//Animation Code
 const animateCSS = (element, animation, duration, prefix = 'animate__') =>
   // We create a Promise and return it
   new Promise((resolve, reject) => {
@@ -548,8 +551,76 @@ const animateCSS = (element, animation, duration, prefix = 'animate__') =>
 });
 
 
+//SETTINGS CODE ********************************************************************************************************
+
+//Sliders Code
+function controlminSlider(minSlider, maxSlider, minLabel, labelList) {
+  const [from, to] = getParsed(minSlider, maxSlider);
+  fillSlider(minSlider, maxSlider, maxSlider);
+  if (from > to) {
+    minSlider.value = to;
+    minLabel.textContent = labelList[to];
+    console.log('bumpin')
+  } else {
+    minSlider.value = from;
+    minLabel.textContent = labelList[from];
+  }
+}
+function controlmaxSlider(minSlider, maxSlider, maxLabel, labelList) {
+  const [from, to] = getParsed(minSlider, maxSlider);
+  fillSlider(minSlider, maxSlider, maxSlider);
+  if (from <= to) {
+    maxSlider.value = to;
+    maxLabel.textContent = labelList[to];
+  } else {
+      maxSlider.value = from;
+      maxLabel.textContent = labelList[from];
+  }
+}
+function getParsed(currentFrom, currentTo) {
+  const from = parseInt(currentFrom.value, 10);
+  const to = parseInt(currentTo.value, 10);
+  return [from, to];
+}
+function fillSlider(from, to, controlSlider) {
+    const rangeDistance = to.max-to.min;
+    const fromPosition = from.value - to.min;
+    const toPosition = to.value - to.min;
+    controlSlider.style.background = `linear-gradient(
+      to right,
+      ${'#C6C6C6'} 0%,
+      ${'#C6C6C6'} ${(fromPosition)/(rangeDistance)*100}%,
+      ${'rgb(103, 198, 241)'} ${(fromPosition)/(rangeDistance)*100}%,
+      ${'rgb(103, 198, 241)'} ${(toPosition)/(rangeDistance)*100}%, 
+      ${'#C6C6C6'} ${(toPosition)/(rangeDistance)*100}%, 
+      ${'#C6C6C6'} 100%)`;
+}
+
+const minHanSlider = document.getElementById('minHanSlider');
+const minHanLabel = document.getElementById('minHanLabel');
+const maxHanLabel = document.getElementById('maxHanLabel');
+const maxHanSlider = document.getElementById('maxHanSlider');
+
+const minFuSlider = document.getElementById('minFuSlider');
+const maxFuSlider = document.getElementById('maxFuSlider');
+const minFuLabel = document.getElementById('minFuLabel');
+const maxFuLabel = document.getElementById('maxFuLabel');
+
+minHanSlider.oninput = () => controlminSlider(minHanSlider, maxHanSlider, minHanLabel, hanList);
+maxHanSlider.oninput = () => controlmaxSlider(minHanSlider, maxHanSlider, maxHanLabel, hanList);
+minFuSlider.oninput = () => controlminSlider(minFuSlider, maxFuSlider, minFuLabel, fuList);
+maxFuSlider.oninput = () => controlmaxSlider(minFuSlider, maxFuSlider, maxFuLabel, fuList);
 
 
 
 
+
+
+
+minHanSlider.value = 0;
+maxHanSlider.value = 12;
+minFuSlider.value = 0;
+maxFuSlider.value = 10;
+fillSlider(minHanSlider, maxHanSlider, maxHanSlider);
+fillSlider(minFuSlider, maxFuSlider, maxFuSlider);
 startGame();

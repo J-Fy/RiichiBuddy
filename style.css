@@ -1,9 +1,17 @@
 /* Some defaults */
+:root {
+  --settingsColor: rgb(39, 56, 110);
+}
+
 html {
     background-color: Canvas;
     color: CanvasText;
     color-scheme: dark;
     font-family: sans-serif;
+}
+
+p{
+    margin: 0;
 }
 
 body{
@@ -235,6 +243,7 @@ button {
     scale: 1;
     opacity: 1;
     transition: all 200ms;
+    z-index: 1;
 
     @starting-style{
         opacity: 0;
@@ -243,12 +252,20 @@ button {
 }
 
 .dialogContent{
+    background-color: var(--settingsColor);
+    position: relative;
+    padding: 1rem;
     border-radius: .5rem;
+}
+
+#supportContent{
     height: 18rem;
     width: 14rem;
-    padding: 1rem;
-    background-color: rgb(39, 56, 110);
-    position: relative;
+}
+
+#settingsContent{
+    height: 25rem;
+    width: 18rem;
 }
 
 .dialogX{
@@ -313,13 +330,14 @@ when opening the dialogs */
 a:focus-visible{
     outline: none;
 }
-
 .dialogX:focus-visible {
+    outline: none;
+}
+input:focus-visible{
     outline: none;
 }
 
 /* SETTINGS TOGGLES */
-
 .toggle {
   position: relative;
   display: inline-block;
@@ -327,11 +345,9 @@ a:focus-visible{
   height: 24px;
   margin-right: .5rem;
 }
-
 .toggle input {
   display: none;
 }
-
 .slider {
   position: absolute;
   cursor: pointer;
@@ -343,7 +359,6 @@ a:focus-visible{
   transition: 0.4s;
   border-radius: 34px;
 }
-
 .slider:before {
   position: absolute;
   content: "";
@@ -355,26 +370,99 @@ a:focus-visible{
   transition: 0.4s;
   border-radius: 50%;
 }
-
 input:checked + .slider {
   background-color: rgb(103, 198, 241);
 }
-
 input:checked + .slider:before {
   transform: translateX(16px);
 }
-
 .settingPanel{
     display: flex;
     align-items: center;
-    margin-bottom: .3rem;
+    margin-bottom: .5rem;
 }
-
 .settingPanel p{
     margin: 0;
 }
+/* End of toggles */
 
 dialog h2 {
     margin: .5rem;
     margin-top: 0;
+}
+
+/* For sliders */
+
+.range_container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+    } 
+
+
+/* .sliders_control {
+  position: relative;
+  min-height: 20px;
+} */
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  pointer-events: all;
+  width: 14px;
+  height: 18px;
+  border-radius: 10%;
+  background-color: white;
+  cursor: pointer;
+}
+
+input[type=range]::-moz-range-thumb {
+  pointer-events: all;
+  width: 14px;
+  height: 18px;
+  border-radius: 10%;
+  cursor: pointer;  
+  border: 0;
+  outline: 0;
+}
+
+input[type="number"] {
+  color: white;
+  width: 2.5rem;
+  height: 1.5rem;
+  font-size: .8rem;
+  font-weight: 700;
+  border: none;
+  border-radius: .2rem;
+  background-color: var(--settingsColor);
+  width: 2.8rem;
+}
+
+input[type="range"] {
+  -webkit-appearance: none; 
+  appearance: none;
+  height: 2px;
+  border-radius: .5rem;
+  width: 80%;
+  position: absolute;
+  left: 1.5rem;
+  top: .3rem;
+  background-color: #C6C6C6;
+  pointer-events: none;
+}
+
+#minHanSlider, #minFuSlider {
+  height: 0;
+  margin-top: 3px;
+  z-index: 1;
+}
+
+.minMaxCont{
+    display: flex;
+    justify-content: space-between;
+}
+
+.range_container{
+    margin-bottom: .8rem;
+    margin-top: .2rem;
 }
