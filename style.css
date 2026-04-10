@@ -264,7 +264,7 @@ button {
 }
 
 #settingsContent{
-    height: 25rem;
+    height: 20rem;
     width: 18rem;
 }
 
@@ -383,6 +383,7 @@ input:checked + .slider:before {
 }
 .settingPanel p{
     margin: 0;
+    font-size: .85rem;
 }
 /* End of toggles */
 
@@ -463,6 +464,11 @@ input[type="range"] {
 }
 
 .range_container{
-    margin-bottom: .8rem;
+    margin-bottom: 1.5rem;
     margin-top: .2rem;
+}
+
+#switches{
+    display: flex;
+    justify-content: space-between;
 }

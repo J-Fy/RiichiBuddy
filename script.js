@@ -93,14 +93,14 @@ const dealerPays = document.getElementById("dealerPays");
 //failed guess popup
 const popup = document.getElementById("incorrectPopup");
 const popupCloseBtn = document.getElementById("closePopup");
-popupCloseBtn.addEventListener('click', () => newHint());
+popupCloseBtn.addEventListener('click', newHint);
 
 //Gear icon - settings
 const settingsBtn = document.getElementById("settingsIcon")
 const settingsDialog = document.getElementById("settings");
 const settingsCloseBtn = document.getElementById("closeSettings");
-settingsBtn.addEventListener('click', () => settingsDialog.showModal())
-settingsCloseBtn.addEventListener('click', () => settingsDialog.close());
+settingsBtn.addEventListener('click', openSettings);
+settingsCloseBtn.addEventListener('click', closeSettings);
 
 //Heart icon - donate dialog
 const heartBtn = document.getElementById("heartIcon")
@@ -127,6 +127,31 @@ let shorthandMode = false; //Remove 00 from scores
 let quickMode = false; //Checks answers as you type
 let reverseMode = false; //Provides a score as hint, user enters han & fu
 let reloadHints = false; //If certain settings were changed, reload hints
+var settingsChanged;
+
+const minHanSlider = document.getElementById('minHanSlider');
+const minHanLabel = document.getElementById('minHanLabel');
+const maxHanLabel = document.getElementById('maxHanLabel');
+const maxHanSlider = document.getElementById('maxHanSlider');
+
+const minFuSlider = document.getElementById('minFuSlider');
+const maxFuSlider = document.getElementById('maxFuSlider');
+const minFuLabel = document.getElementById('minFuLabel');
+const maxFuLabel = document.getElementById('maxFuLabel');
+
+const weightedSwitch = document.getElementById('ms-weighted');
+const randomSwitch = document.getElementById('ms-random');
+const kiriageSwitch = document.getElementById('ms-kiriage');
+const shorthandSwitch = document.getElementById('ms-short');
+const autocheckSwitch = document.getElementById('ms-autocheck');
+const baseSwitch = document.getElementById('ms-base');
+const reverseSwitch = document.getElementById('ms-reverse');
+
+settingsDialog.addEventListener("click", function(event){
+    if (event.target.classList.contains("setting")){
+        settingsChanged = true;
+    }
+});
 
 // counters
 let iHint = 0;
@@ -553,30 +578,41 @@ const animateCSS = (element, animation, duration, prefix = 'animate__') =>
 
 //SETTINGS CODE ********************************************************************************************************
 
+function openSettings() {
+    settingsChanged = false;
+    settingsDialog.showModal();
+}
+
+function closeSettings() {
+
+    settingsDialog.close();
+}
+
 //Sliders Code
-function controlminSlider(minSlider, maxSlider, minLabel, labelList) {
+function controlSlider(max, minSlider, maxSlider, Label, labelList) {
   const [from, to] = getParsed(minSlider, maxSlider);
   fillSlider(minSlider, maxSlider, maxSlider);
-  if (from > to) {
-    minSlider.value = to;
-    minLabel.textContent = labelList[to];
-    console.log('bumpin')
+  if (max) {
+    if (from <= to) {
+        maxSlider.value = to;
+        Label.textContent = labelList[to];
+
+    } else {
+        maxSlider.value = from;
+        Label.textContent = labelList[from];
+    }
   } else {
-    minSlider.value = from;
-    minLabel.textContent = labelList[from];
+    if (from > to) {
+        minSlider.value = to;
+        Label.textContent = labelList[to];
+    } else {
+        minSlider.value = from;
+        Label.textContent = labelList[from];
+    }
   }
+  console.log(minHan, maxHan, minFu, maxFu)
 }
-function controlmaxSlider(minSlider, maxSlider, maxLabel, labelList) {
-  const [from, to] = getParsed(minSlider, maxSlider);
-  fillSlider(minSlider, maxSlider, maxSlider);
-  if (from <= to) {
-    maxSlider.value = to;
-    maxLabel.textContent = labelList[to];
-  } else {
-      maxSlider.value = from;
-      maxLabel.textContent = labelList[from];
-  }
-}
+
 function getParsed(currentFrom, currentTo) {
   const from = parseInt(currentFrom.value, 10);
   const to = parseInt(currentTo.value, 10);
@@ -596,21 +632,12 @@ function fillSlider(from, to, controlSlider) {
       ${'#C6C6C6'} 100%)`;
 }
 
-const minHanSlider = document.getElementById('minHanSlider');
-const minHanLabel = document.getElementById('minHanLabel');
-const maxHanLabel = document.getElementById('maxHanLabel');
-const maxHanSlider = document.getElementById('maxHanSlider');
-
-const minFuSlider = document.getElementById('minFuSlider');
-const maxFuSlider = document.getElementById('maxFuSlider');
-const minFuLabel = document.getElementById('minFuLabel');
-const maxFuLabel = document.getElementById('maxFuLabel');
-
-minHanSlider.oninput = () => controlminSlider(minHanSlider, maxHanSlider, minHanLabel, hanList);
-maxHanSlider.oninput = () => controlmaxSlider(minHanSlider, maxHanSlider, maxHanLabel, hanList);
-minFuSlider.oninput = () => controlminSlider(minFuSlider, maxFuSlider, minFuLabel, fuList);
-maxFuSlider.oninput = () => controlmaxSlider(minFuSlider, maxFuSlider, maxFuLabel, fuList);
-
+minHanSlider.oninput = () => controlSlider(false, minHanSlider, maxHanSlider, minHanLabel, hanList);
+maxHanSlider.oninput = () => controlSlider(true, minHanSlider, maxHanSlider, maxHanLabel, hanList);
+minFuSlider.oninput = () => controlSlider(false, minFuSlider, maxFuSlider, minFuLabel, fuList);
+maxFuSlider.oninput = () => controlSlider(true, minFuSlider, maxFuSlider, maxFuLabel, fuList);
+baseSwitch.oninput = () => shorthandSwitch.checked = false;
+shorthandSwitch.oninput = () => baseSwitch.checked = false;
 
 
 
