@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riichi Buddy</title>
+    <link rel="icon" href="images/chun.svg"/>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -40,22 +41,26 @@
     <dialog class="dialogs" id="settings">
         <div class="dialogContent" id="settingsContent">
             <h2 style="margin-bottom: 1.5rem;">Settings</h2>
-            <div>Han range</div>
-            <div class="range_container">
-                <input class="setting" id="minHanSlider" type="range" value="0" min="0" max="12"/>
-                <input class="setting" id="maxHanSlider" type="range" value="12" min="0" max="12"/>
-                <div class="minMaxCont">
-                    <p class="minMaxLabel" id="minHanLabel">1</p>
-                    <p class="minMaxLabel" id="maxHanLabel">13</p>
+            <div class="ranges" id="hanRange">
+                <div>Han range</div>
+                <div class="range_container">
+                    <input class="setting" id="minHanSlider" type="range" value="0" min="0" max="12"/>
+                    <input class="setting" id="maxHanSlider" type="range" value="12" min="0" max="12"/>
+                    <div class="minMaxCont">
+                        <p class="minMaxLabel" id="minHanLabel">1</p>
+                        <p class="minMaxLabel" id="maxHanLabel">13</p>
+                    </div>
                 </div>
             </div>
-            <div>Fu range</div>
-            <div class="range_container">
-                <input class="setting" id="minFuSlider" type="range" value="0" min="0" max="10"/>
-                <input class="setting" id="maxFuSlider" type="range" value="10" min="0" max="10"/>
-                <div class="minMaxCont">
-                    <p class="minMaxLabel" id="minFuLabel">20</p>
-                    <p class="minMaxLabel" id="maxFuLabel">110</p>
+            <div class="ranges" id="fuRange">
+                <div>Fu range</div>
+                <div class="range_container">
+                    <input class="setting" id="minFuSlider" type="range" value="0" min="0" max="10"/>
+                    <input class="setting" id="maxFuSlider" type="range" value="10" min="0" max="10"/>
+                    <div class="minMaxCont">
+                        <p class="minMaxLabel" id="minFuLabel">20</p>
+                        <p class="minMaxLabel" id="maxFuLabel">110</p>
+                    </div>
                 </div>
             </div>
             <div id="switches">

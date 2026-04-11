@@ -77,13 +77,21 @@ var dealer;
 var tsumo;
 let hintList = [];
 
+//Hint visuals
+const hanBox = document.getElementById("hanBox")
+const fuBox = document.getElementById("fuBox")
+const fuText = document.getElementById("fuText")
+const dealFlag = document.getElementById("dealFlag")
+const nonFlag = document.getElementById("nonFlag")
+const tsumoFlag = document.getElementById("tsumoFlag")
+const ronFlag = document.getElementById("ronFlag")
+
 //Flag used so dealer pay amount box only animates once
 var settingHints;
 
-//References the object of the current score box being typed in
-var scoreBox;
 //Flag that switches the scorebox variable between boxes
 let currentGuess = 0;
+
 //Scoreboxes
 let box2Enabled = false;
 const pays = document.getElementById("pays");
@@ -111,23 +119,26 @@ heartCloseBtn.addEventListener('click', () => heartDialog.close());
 
 
 //Settings
-let minHan = 1;
-let maxHan = 13;
-let minFu = 20;
-let maxFu = 110;
-let nonDealerEnabled = true;
-let dealerEnabled = true;
-let ronEnabled = true;
-let tsumoEnabled = true;
-let weightedMode = true; //Weights hints based on rarity
-let hintMode = 'list'; //list or trueRandom
-let randomMode = true; //Shuffles list before iterating
-let kiriageMode = false; //Rounds some values up to mangan
-let shorthandMode = false; //Remove 00 from scores
-let quickMode = false; //Checks answers as you type
-let reverseMode = false; //Provides a score as hint, user enters han & fu
-let reloadHints = false; //If certain settings were changed, reload hints
-var settingsChanged;
+var minHan;
+var maxHan;
+var minFu;
+var maxFu;
+var nonDealerEnabled;
+var dealerEnabled;
+var ronEnabled;
+var tsumoEnabled;
+var weightedMode; //Weights hints based on rarity
+var randomMode; //Shuffles list before iterating
+var baseMode; //Checks base point amount only
+var shorthandMode; //Remove 00 from scores
+var kiriageMode; //Rounds some values up to mangan
+var autocheckMode; //Checks answers as you type
+var reverseMode; //Provides a score as hint, user enters han & fu
+var trueRandomMode; //list or trueRandom
+var settingsChanged; //bool that restarts game if a setting was clicked
+var digitLimit; //Number of digits allowed in answerboxes, 5 (default) or 3 (shorthand mode)
+var hList; //Active han list (unweighted or weighted)
+var fList; //Active fu list (unweighted or weighted)
 
 const minHanSlider = document.getElementById('minHanSlider');
 const minHanLabel = document.getElementById('minHanLabel');
@@ -146,6 +157,7 @@ const shorthandSwitch = document.getElementById('ms-short');
 const autocheckSwitch = document.getElementById('ms-autocheck');
 const baseSwitch = document.getElementById('ms-base');
 const reverseSwitch = document.getElementById('ms-reverse');
+const trueRandomSwitch = document.getElementById('ms-trueRand')
 
 settingsDialog.addEventListener("click", function(event){
     if (event.target.classList.contains("setting")){
@@ -174,42 +186,87 @@ toastr.options = {
   "hideEasing": "linear",
   "showMethod": "fadeIn",
   "hideMethod": "fadeOut"
-}
+};
 
 
 
 function startGame(){
-    console.log("I know you're reading this, please don't judge my ugly code. I'm a mainframe dev not a web dev")
-    generateHintList()
-    newHint()
-}
+    console.log("I know you're reading this, please don't judge my ugly code. I'm a mainframe dev not a web dev");
+    // apply settings
+    minHan = hanList[minHanSlider.value];
+    maxHan = hanList[maxHanSlider.value];
+    if (minHan < 5) {
+        minFu = fuList[minFuSlider.value];
+        maxFu = fuList[maxFuSlider.value];
+    }
+    weightedMode = weightedSwitch.checked;
+    randomMode = randomSwitch.checked;
+    baseMode = baseSwitch.checked;
+    shorthandMode = shorthandSwitch.checked;
+    kiriageMode = kiriageSwitch.checked;
+    autocheckMode = autocheckSwitch.checked;
+    reverseMode = reverseSwitch.checked;
+    trueRandomMode = trueRandomSwitch.checked;
+    if (shorthandMode) {
+        digitLimit = 3;
+    } else {
+        digitLimit = 5;
+    };
+    if (weightedMode) {
+        hList = hanListWeighted;
+        fList = fuListWeighted;
+    } else {
+        hList = hanList;
+        fList = fuList;
+    };
+    // create list of hints 
+    if (!trueRandomMode) {
+        generateHintList();
+    }
+    // load the hint
+    newHint();
+};
 
 function generateHintList(){
-    for (let x = 0; x < hanList.length; x++) {
-        for (let y = 0; y < fuList.length; y++) {
-            han = hanList[x]
-            fu = fuList[y]
-            if (hanList[x] > 4) {
-                fu = ''
-                if (y > 0){
-                    break
-                }
-            }
-            var hint
-                //  han,fu,tsumo,dealer
-            hint = [han,fu,false,false]
-            addHint(hint)
-            hint = [han,fu,false,true]
-            addHint(hint)
-            hint = [han,fu,true,true]
-            addHint(hint)
-            hint = [han,fu,true,false]
-            addHint(hint)
-            
-        }
-    }
-    console.log(hintList)
-}
+    hintList = [];
+    iHint = 0;
+    for (let x = 0; x < hList.length; x++) {
+        if (hList[x] >= minHan && hList[x] <= maxHan) {
+            han = hList[x];
+            if (han > 4) {
+                fu = '';
+                generateHints();
+            } else {
+                for (let y = 0; y < fList.length; y++) {
+                    if (fList[y] >= minFu && fList[y] <= maxFu) {
+                        fu = fList[y];
+                        generateHints();
+                    };
+                };
+            };
+        };
+    };
+    console.log(hintList);
+    if (randomMode) {
+        shuffle(hintList);
+    };
+    console.log(hintList);
+};
+
+function generateHints() {
+    var hint;
+    //      han,fu,tsumo,dealer
+    hint = [han,fu,false,false];
+    addHint(hint);
+    if (!baseMode) {
+        hint = [han,fu,false,true];
+        addHint(hint);
+        hint = [han,fu,true,true];
+        addHint(hint);
+        hint = [han,fu,true,false];
+        addHint(hint);
+    };
+};
 
 function addHint(hint) {
     if (!checkImpossible(hint)) {
@@ -219,48 +276,58 @@ function addHint(hint) {
 
 function newHint() {
     popup.close()
-    switch(hintMode) {
-        case "list":
-            nextListHint()
-            break
-        case "trueRandom":
-            newRandomHint()
-            break
+    if (trueRandomMode) {
+        newRandomHint()
+    } else {
+        nextListHint()
     }
-    moveHints(han,fu,dealer,tsumo)
+    loadHint(han,fu,dealer,tsumo)
 }
 
 function nextListHint() {
-    han = hintList[iHint][0]
-    fu = hintList[iHint][1]
-    tsumo = hintList[iHint][2]
-    dealer = hintList[iHint][3]
-    iHint ++
+    han = hintList[iHint][0];
+    fu = hintList[iHint][1];
+    tsumo = hintList[iHint][2];
+    dealer = hintList[iHint][3];
+    iHint ++;
     if (iHint == hintList.length){
-        iHint = 0
-        generateHintList()
+        generateHintList();
     }
 }
 
+//For ListRandom
+function shuffle(array) {
+  let currentIndex = array.length;
+
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+
+    // Pick a remaining element...
+    let randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+}
+
+//TrueRandom
 function newRandomHint() {
-    han = hanList[Math.floor(Math.random() * hanList.length)]
-    fu = fuList[Math.floor(Math.random() * fuList.length)]
-    dealer = Math.random() < .5
+    han = hList[Math.floor(Math.random() * hList.length)]
+    fu = fList[Math.floor(Math.random() * fList.length)]
+    if (weightedMode){
+        dealer = Math.random() < .33
+    } else {
+        dealer = Math.random() < .5
+    }
     tsumo = Math.random() < .5
     while (checkImpossible([han,fu,tsumo]) == true){
-        fu = fuList[Math.floor(Math.random() * fuList.length)]
+        fu = fList[Math.floor(Math.random() * fList.length)]
     }
 }
 
-function moveHints(han,fu,dealer,tsumo){
-    //pull the divs from the document
-    let hanBox = document.getElementById("hanBox")
-    let fuBox = document.getElementById("fuBox")
-    let dealFlag = document.getElementById("dealFlag")
-    let nonFlag = document.getElementById("nonFlag")
-    let tsumoFlag = document.getElementById("tsumoFlag")
-    let ronFlag = document.getElementById("ronFlag")
-
+function loadHint(han,fu,dealer,tsumo){
     //initialize values
     currentGuess = 0
     pays.textContent = ""
@@ -268,7 +335,7 @@ function moveHints(han,fu,dealer,tsumo){
     settingHints = true
 
     //grey out dealer pays box
-    if (dealer || !tsumo){
+    if (dealer || !tsumo || baseMode){
         dealerPays.style.borderColor = "rgb(44, 44, 44)"
         box2Enabled = false
     } else {
@@ -278,52 +345,64 @@ function moveHints(han,fu,dealer,tsumo){
 
     // #TODO : pause other actions while animating goes, or cancel if support window is open
     //animate each item as it populates
+    var timeout = 200;
     setTimeout(()=> {
         hanBox.textContent = han
         animateCSS(hanBox, 'pulse','0.5s')
-    }, 200)
+    }, timeout);
+    timeout += 200;
 
     setTimeout(()=> {
         if (han > 4){
-        let fuText = document.getElementById("fuText")
-        let fuBox = document.getElementById("fuBox")
-        fuBox.style.borderColor = "GrayText"
-        fuBox.style.color = "GrayText"
-        fuText.style.color = "GrayText"
+            fuBox.classList.add('greyed')
+            fuText.classList.add('greyed')
         } else {
-            fuBox.textContent = fu
+            fuBox.classList.remove('greyed')
+            fuText.classList.remove('greyed')
         }
+        fuBox.textContent = fu
         animateCSS(fuBox, 'pulse','0.5s')
-    }, 400)
+    }, timeout)
+    timeout += 200;
 
-    setTimeout(()=> {
-        if (dealer){
-            nonFlag.classList.add('greyed')
-            dealFlag.classList.remove('greyed')
-            animateCSS(dealFlag, 'pulse','0.5s')
-        } else {
-            dealFlag.classList.add('greyed')
-            nonFlag.classList.remove('greyed')
-            animateCSS(nonFlag, 'pulse','0.5s')
-        }
-        
-    }, 600)
+    if (baseMode) {
+        nonFlag.classList.add('greyed');
+        dealFlag.classList.add('greyed');
+        ronFlag.classList.add('greyed');
+        tsumoFlag.classList.add('greyed');
+    } else {
+        setTimeout(()=> {
+            if (dealer){
+                nonFlag.classList.add('greyed');
+                dealFlag.classList.remove('greyed');
+                animateCSS(dealFlag, 'pulse','0.5s');
+            } else {
+                dealFlag.classList.add('greyed');
+                nonFlag.classList.remove('greyed');
+                animateCSS(nonFlag, 'pulse','0.5s');
+            }
+        }, timeout);
+        timeout += 200;
+
+        setTimeout(()=> {
+            if (tsumo){
+                ronFlag.classList.add('greyed');
+                tsumoFlag.classList.remove('greyed');
+                animateCSS(tsumoFlag, 'pulse','0.5s');
+            } else {
+                tsumoFlag.classList.add('greyed');
+                ronFlag.classList.remove('greyed');
+                animateCSS(ronFlag, 'pulse','0.5s');
+            }
+        }, timeout);
+        timeout += 200;
+    }
     
-    setTimeout(()=> {
-        if (tsumo){
-            ronFlag.classList.add('greyed')
-            tsumoFlag.classList.remove('greyed')
-            animateCSS(tsumoFlag, 'pulse','0.5s')
-        } else {
-            tsumoFlag.classList.add('greyed')
-            ronFlag.classList.remove('greyed')
-            animateCSS(ronFlag, 'pulse','0.5s')
-        }
-    }, 800)
 
     setTimeout(()=> {
         toggleLitScore()
-    }, 1000)
+    }, timeout)
+    timeout += 200;
 
 }
 
@@ -384,10 +463,11 @@ document.getElementById("keyboard-cont").addEventListener("click", (e) => {
 
 //Typing on keyboard
 document.addEventListener("keyup", (e) => {
+    var scoreBox;
     if (currentGuess == 0){
-        scoreBox = pays
+        scoreBox = pays;
     } else {
-        scoreBox = dealerPays
+        scoreBox = dealerPays;
     }
 
     let pressedKey = String(e.key)
@@ -435,7 +515,7 @@ document.addEventListener("keyup", (e) => {
     if (!found || found.length > 1) {
         return
     } else {
-        if (scoreBox.textContent.length != 5){
+        if (scoreBox.textContent.length != digitLimit){
             insertDigit(pressedKey,scoreBox)
         }
     }
@@ -446,7 +526,7 @@ function insertDigit(pressedKey,scoreBox){
     if (!(pressedKey == 0 && scoreBox.textContent.length == 0)){
         scoreBox.textContent += pressedKey
     }
-    if (scoreBox.textContent.length == 5){
+    if (scoreBox.textContent.length == digitLimit){
         if (box2Enabled){
             currentGuess = 1
             toggleLitScore()
@@ -455,10 +535,7 @@ function insertDigit(pressedKey,scoreBox){
 }
 
 //Delete digits from the guess box
-function deleteDigit () {
-    if (scoreBox.textContent.length == 6){
-        scoreBox.textContent = scoreBox.textContent.replace(",","")
-    }
+function deleteDigit (scoreBox) {
     scoreBox.textContent = scoreBox.textContent.slice(0,scoreBox.textContent.length - 1)
     if (scoreBox.textContent.length == 0) {
         currentGuess = 0
@@ -468,70 +545,86 @@ function deleteDigit () {
 
 function checkGuess() {
     if (box2Enabled && dealerPays.textContent == ""){
-        currentGuess = 1
-        toggleLitScore()
-        return
+        currentGuess = 1;
+        toggleLitScore();
+        return;
     }
-    var base
-    var answer
-    var answer2
-    let correct = true
+    if (pays.textContent == ""){
+        toggleLitScore();
+        return;
+    }
+    var base;
+    var answer;
+    let answer2 = 0;
+    let correct = true;
     switch (han) {
         case 1:
         case 2:
         case 3:
         case 4:
-            base = fu * 2 ** (2 + han)
+            base = fu * 2 ** (2 + han);
             if (base > 2000) {
-                base = 2000
+                base = 2000;
             }
-            break
+            break;
         case 5:
-            base = 2000
-            break
+            base = 2000;
+            break;
         case 6:
         case 7:
-            base = 3000
-            break
+            base = 3000;
+            break;
         case 8:
         case 9:
         case 10:
-            base = 4000
-            break
+            base = 4000;
+            break;
         case 11:
         case 12:
-            base = 6000
-            break
+            base = 6000;
+            break;
         case 13:
-            base = 8000
-            break 
-    }
-
-    if (tsumo){
-        if (dealer) {
-            answer = base * 2
-        } else {
-            answer = base
-            answer2 = base * 2
-        }
+            base = 8000;
+            break;
+    };
+    if (kiriageMode && base > 1900) {
+        base = 2000;
+    };
+    if (baseMode) {
+        answer = base;
     } else {
-        if (dealer) {
-            answer = base * 6
+        if (tsumo){
+            if (dealer) {
+                answer = base * 2;
+            } else {
+                answer = base
+                answer2 = base * 2;
+            };
         } else {
-            answer = base * 4
-        }
+            if (dealer) {
+                answer = base * 6;
+            } else {
+                answer = base * 4;
+            };
+        };
+        //points round to the nearest 100
+        answer = Math.ceil(answer / 100) * 100;
+        answer2 = Math.ceil(answer2 / 100) * 100;
+        if (shorthandMode) {
+            answer = chop(answer);
+            if (answer2 > 0) {
+                answer2 = chop(answer2);
+            };
+        };
+    };
+    
+    if (pays.textContent != answer) {
+        correct = false
+    };
+    if (box2Enabled && dealerPays.textContent != answer2) {
+        correct = false
+    };
 
-    }
-    answer = Math.ceil(answer / 100) * 100
-    if (answer2 > 0){
-        answer2 = Math.ceil(answer2 / 100) * 100
-    }
-    if (pays.textContent.replace(",","") != answer) {
-        correct = false
-    }
-    if (box2Enabled && dealerPays.textContent.replace(",","") != answer2) {
-        correct = false
-    }
     if (correct) {
         streak += 1
         toastr.success("Answer correct! Streak: " + streak)
@@ -548,7 +641,11 @@ function checkGuess() {
     }
 }
 
-
+function chop(num) {
+    var ans = String(num);
+    ans = ans.slice(0, ans.length - 2);
+    return Number(ans)
+};
 
 //Animation Code
 const animateCSS = (element, animation, duration, prefix = 'animate__') =>
@@ -584,8 +681,13 @@ function openSettings() {
 }
 
 function closeSettings() {
-
     settingsDialog.close();
+    if (settingsChanged) {
+        startGame();
+    }
+    console.log(minHan, maxHan, minFu, maxFu);
+    console.log(baseMode);
+    
 }
 
 //Sliders Code
@@ -610,7 +712,6 @@ function controlSlider(max, minSlider, maxSlider, Label, labelList) {
         Label.textContent = labelList[from];
     }
   }
-  console.log(minHan, maxHan, minFu, maxFu)
 }
 
 function getParsed(currentFrom, currentTo) {
@@ -632,7 +733,14 @@ function fillSlider(from, to, controlSlider) {
       ${'#C6C6C6'} 100%)`;
 }
 
-minHanSlider.oninput = () => controlSlider(false, minHanSlider, maxHanSlider, minHanLabel, hanList);
+minHanSlider.oninput = () => {
+    controlSlider(false, minHanSlider, maxHanSlider, minHanLabel, hanList);
+    if (hanList[minHanSlider.value] > 4) {
+        document.getElementById('fuRange').classList.add('dimmed');
+    } else {
+        document.getElementById('fuRange').classList.remove('dimmed');
+    };
+};
 maxHanSlider.oninput = () => controlSlider(true, minHanSlider, maxHanSlider, maxHanLabel, hanList);
 minFuSlider.oninput = () => controlSlider(false, minFuSlider, maxFuSlider, minFuLabel, fuList);
 maxFuSlider.oninput = () => controlSlider(true, minFuSlider, maxFuSlider, maxFuLabel, fuList);
@@ -642,12 +750,20 @@ shorthandSwitch.oninput = () => baseSwitch.checked = false;
 
 
 
-
-
+//Establish default settings (I'm doing this twice because firefox saves var values between reloads)
 minHanSlider.value = 0;
 maxHanSlider.value = 12;
 minFuSlider.value = 0;
 maxFuSlider.value = 10;
+weightedSwitch.checked = true;
+randomSwitch.checked = true;
+baseSwitch.checked = false;
+shorthandSwitch.checked = false;
+kiriageSwitch.checked = false;
+autocheckSwitch.checked = false;
+reverseSwitch.checked = false;
+trueRandomSwitch.checked = false;
+settingsChanged = true;
 fillSlider(minHanSlider, maxHanSlider, maxHanSlider);
 fillSlider(minFuSlider, maxFuSlider, maxFuSlider);
 startGame();

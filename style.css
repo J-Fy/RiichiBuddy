@@ -472,3 +472,11 @@ input[type="range"] {
     display: flex;
     justify-content: space-between;
 }
+
+.dimmed{
+    filter: brightness(.5);
+}
+
+.ranges{
+    transition: filter 300ms;
+}
