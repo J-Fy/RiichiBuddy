@@ -25,6 +25,8 @@ body{
     justify-content: right;
     margin: 1.5rem;
     font-size: 2rem;
+    position: absolute;
+    right: 0;
 }
 
 #bar i{
@@ -52,8 +54,18 @@ body{
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 60vh;
+    height: 100vh;
     width: auto;
+}
+
+/* sizes are too small and I don't wanna fix it */
+#score, #hints, #keyboard {
+    scale: 1.2;
+    margin-top: 2.5rem;
+}
+
+#support {
+    scale: 1.2;
 }
 
 
@@ -167,8 +179,6 @@ button {
     display: flex;
     font-size: 1rem;
     font-weight: 700;
-    margin: .5rem;
-    margin-right: 2rem;
     align-items: center;
     justify-content: center;
 }
