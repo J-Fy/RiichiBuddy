@@ -89,11 +89,9 @@ const ronFlag = document.getElementById("ronFlag");
 //Flag used so dealer pay amount box only animates once
 var settingHints;
 
-//Flag that switches the scorebox variable between boxes
-let currentGuess = 0;
-
 //Scoreboxes
 let box2Enabled = false;
+let selectedBox = 1;
 const pays = document.getElementById("pays");
 const dealerPays = document.getElementById("dealerPays");
 
@@ -191,7 +189,6 @@ toastr.options = {
 
 
 function startGame(){
-    console.log("Please don't judge my code. I'm a mainframe dev not a web dev lol");
     // apply settings
     minHan = hanList[minHanSlider.value];
     maxHan = hanList[maxHanSlider.value];
@@ -207,7 +204,7 @@ function startGame(){
     autocheckMode = autocheckSwitch.checked;
     reverseMode = reverseSwitch.checked;
     trueRandomMode = trueRandomSwitch.checked;
-    if (baseMode || (!tsumoEnabled && !nonDealerEnabled)) {
+    if (baseMode || reverseMode || (!tsumoEnabled && !nonDealerEnabled)) {
         dealerPays.style.display = "none";
     } else {
         dealerPays.style.display = "";
@@ -343,7 +340,7 @@ function newRandomHint() {
 
 function loadHint(han,fu,dealer,tsumo){
     //initialize values
-    currentGuess = 0;
+    selectedBox = 1;
     pays.textContent = "";
     dealerPays.textContent = "";
     settingHints = true;
@@ -373,11 +370,15 @@ function loadHint(han,fu,dealer,tsumo){
         } else {
             fuBox.classList.remove('greyed');
             fuText.classList.remove('greyed');
-        }
+        };
+        if (!(fuBox.textContent == "" && fu == "")) {
+            animateCSS(fuBox, 'pulse','0.5s');
+        };
         fuBox.textContent = fu;
-        animateCSS(fuBox, 'pulse','0.5s');
     }, timeout);
-    timeout += 200;
+    if (!(fuBox.textContent == "" && fu == "")) {
+            timeout += 200;
+    };
 
     if (baseMode) {
         nonFlag.classList.add('greyed');
@@ -394,7 +395,7 @@ function loadHint(han,fu,dealer,tsumo){
                 dealFlag.classList.add('greyed');
                 nonFlag.classList.remove('greyed');
                 animateCSS(nonFlag, 'pulse','0.5s');
-            }
+            };
         }, timeout);
         timeout += 200;
 
@@ -407,10 +408,10 @@ function loadHint(han,fu,dealer,tsumo){
                 tsumoFlag.classList.add('greyed');
                 ronFlag.classList.remove('greyed');
                 animateCSS(ronFlag, 'pulse','0.5s');
-            }
+            };
         }, timeout);
         timeout += 200;
-    }
+    };
 
     setTimeout(()=> {
         toggleLitScore()
@@ -418,10 +419,10 @@ function loadHint(han,fu,dealer,tsumo){
     }, timeout)
     timeout += 200;
 
-}
+};
 
 function toggleLitScore(){
-    if (currentGuess == 0) {
+    if (selectedBox == 1) {
         pays.style.borderColor = 'gainsboro';
         animateCSS(pays, 'pulse','0.5s');
         if (box2Enabled){
@@ -477,7 +478,7 @@ document.getElementById("keyboard-cont").addEventListener("click", (e) => {
 //Typing on keyboard
 document.addEventListener("keyup", (e) => {
     var scoreBox;
-    if (currentGuess == 0){
+    if (selectedBox == 1){
         scoreBox = pays;
     } else {
         scoreBox = dealerPays;
@@ -540,7 +541,7 @@ function insertDigit(pressedKey,scoreBox){
     };
     if (scoreBox.textContent.length == digitLimit){
         if (box2Enabled){
-            currentGuess = 1;
+            selectedBox = 2;
             toggleLitScore();
         };
     };
@@ -552,23 +553,40 @@ function deleteDigit (scoreBox) {
         scoreBox.textContent = scoreBox.textContent.slice(0,scoreBox.textContent.length - 1);
     }
     if (scoreBox.textContent.length == 0) {
-        currentGuess = 0;
+        selectedBox = 1;
         toggleLitScore();
     };
 };
 
+//Switch boxes
+pays.addEventListener("click", function() {
+    if (!autocheckMode) {
+        selectedBox = 1;
+        toggleLitScore();
+    };
+});
+dealerPays.addEventListener("click", function() {
+    if (!autocheckMode && box2Enabled) {
+        selectedBox = 2;
+        toggleLitScore();
+    };
+});
+
+//Evaluate the guess and return correct or incorrect popup
 function checkGuess() {
     let guess1 = pays.textContent;
     let guess2 = dealerPays.textContent;
-    if (box2Enabled && guess2 == "" && !autocheckMode){
-        currentGuess = 1;
-        toggleLitScore();
-        return;
-    };
     if (guess1 == ""){
+        selectedBox = 1;
         toggleLitScore();
         return;
-    };
+    } else {
+        if (box2Enabled && guess2 == "" && !autocheckMode){
+            selectedBox = 2;
+            toggleLitScore();
+            return;
+        };
+    }
     let base = 0;
     let answer1 = 0;
     let answer2 = 0;
@@ -640,8 +658,8 @@ function checkGuess() {
         moveOn = false;
         let ans1String = String(answer1);
         let ans2String = String(answer2);
-        digitLimit = ans1String.length;
-        if (currentGuess == 0) {
+        digitLimit = selectedBox == 1 ? ans1String.length : ans2String.length;
+        if (selectedBox == 1) {
             correct = scrutinizeGuess(guess1, ans1String);
         } else {
             correct = scrutinizeGuess(guess2, ans2String);
@@ -742,11 +760,12 @@ function controlSlider(max, minSlider, maxSlider, Label, labelList) {
     if (from <= to) {
         maxSlider.value = to;
         Label.textContent = labelList[to];
-
+        
     } else {
         maxSlider.value = from;
         Label.textContent = labelList[from];
     };
+    setToggleAccessible(maxSlider, minSlider);
   } else {
     if (from > to) {
         minSlider.value = to;
@@ -757,6 +776,14 @@ function controlSlider(max, minSlider, maxSlider, Label, labelList) {
     };
   };
 };
+
+function setToggleAccessible(currSlider, otherSlider) {
+  if (Number(currSlider.value) <= 0 || currSlider.value == otherSlider.value) {
+    currSlider.style.zIndex = 2;
+  } else {
+    currSlider.style.zIndex = 0;
+  }
+}
 
 function getParsed(currentFrom, currentTo) {
   const from = parseInt(currentFrom.value, 10);
@@ -777,6 +804,7 @@ function fillSlider(from, to, controlSlider) {
       ${'#C6C6C6'} 100%)`;
 };
 
+//Dim the fu slider when minimum han is above 4
 minHanSlider.oninput = () => {
     controlSlider(false, minHanSlider, maxHanSlider, minHanLabel, hanList);
     if (hanList[minHanSlider.value] > 4) {
@@ -785,11 +813,30 @@ minHanSlider.oninput = () => {
         document.getElementById('fuRange').classList.remove('dimmed');
     };
 };
+
+//Dim sliders and switches when reverse mode enabled
+reverseSwitch.oninput = () => {
+    let elements = Array.from(document.getElementsByClassName("nonrev"));
+    if (reverseSwitch.checked) {
+        elements.forEach(element => {
+            element.classList.add('dimmed');
+        });
+    } else {
+        elements.forEach(element => {
+            element.classList.remove('dimmed');
+        });
+    }
+}
 maxHanSlider.oninput = () => controlSlider(true, minHanSlider, maxHanSlider, maxHanLabel, hanList);
 minFuSlider.oninput = () => controlSlider(false, minFuSlider, maxFuSlider, minFuLabel, fuList);
 maxFuSlider.oninput = () => controlSlider(true, minFuSlider, maxFuSlider, maxFuLabel, fuList);
 baseSwitch.oninput = () => shorthandSwitch.checked = false;
 shorthandSwitch.oninput = () => baseSwitch.checked = false;
+trueRandomSwitch.oninput = () => {
+    if (trueRandomSwitch.checked) {
+        randomSwitch.checked = true;
+    };
+};
 
 
 
@@ -814,4 +861,5 @@ trueRandomSwitch.checked = false;
 settingsChanged = true;
 fillSlider(minHanSlider, maxHanSlider, maxHanSlider);
 fillSlider(minFuSlider, maxFuSlider, maxFuSlider);
+console.log("Please don't judge my code. I'm a mainframe dev not a web dev lol");
 startGame();

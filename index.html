@@ -40,8 +40,8 @@
     </dialog> 
     <dialog class="dialogs" id="settings">
         <div class="dialogContent" id="settingsContent">
-            <h2 style="margin-bottom: 1.5rem;">Settings</h2>
-            <div class="ranges" id="hanRange">
+            <h2>Settings</h2>
+            <div class="ranges nonrev" id="hanRange">
                 <div>Han range</div>
                 <div class="range_container">
                     <input class="setting" id="minHanSlider" type="range" value="0" min="0" max="12"/>
@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            <div class="ranges" id="fuRange">
+            <div class="ranges nonrev" id="fuRange">
                 <div>Fu range</div>
                 <div class="range_container">
                     <input class="setting" id="minFuSlider" type="range" value="0" min="0" max="10"/>
@@ -65,28 +65,28 @@
             </div>
             <div id="switches">
                 <div>
-                    <div class="settingPanel">
+                    <div class="settingPanel nonrev">
                         <label class="toggle">
                             <input type="checkbox" class="setting" id="ms-weighted" checked/>
                             <span class="slider"></span>
                         </label>
                         <p>Weight odds</p> 
                     </div>
-                    <div class="settingPanel">
+                    <div class="settingPanel nonrev">
                         <label class="toggle">
                             <input type="checkbox" class="setting" id="ms-random" checked/>
                             <span class="slider"></span>
                         </label>
                         <p>Random order</p>
                     </div>
-                    <div class="settingPanel">
+                    <div class="settingPanel nonrev">
                         <label class="toggle">
                             <input type="checkbox" class="setting" id="ms-base"/>
                             <span class="slider"></span>
                         </label>
                         <p>Base points</p>
                     </div>
-                    <div class="settingPanel">
+                    <div class="settingPanel nonrev">
                         <label class="toggle">
                             <input type="checkbox" class="setting" id="ms-short"/>
                             <span class="slider"></span>
@@ -95,19 +95,26 @@
                     </div>
                 </div>
                 <div>
-                    <div class="settingPanel">
+                    <div class="settingPanel nonrev">
                         <label class="toggle">
                             <input type="checkbox" class="setting" id="ms-kiriage"/>
                             <span class="slider"></span>
                         </label>
                         <p>Kiriage</p>
                     </div>
-                    <div class="settingPanel">
+                    <div class="settingPanel nonrev">
                         <label class="toggle">
                             <input type="checkbox" class="setting" id="ms-autocheck"/>
                             <span class="slider"></span>
                         </label>
                         <p>Autocheck</p>
+                    </div>
+                    <div class="settingPanel nonrev">
+                        <label class="toggle">
+                            <input type="checkbox" class="setting" id="ms-trueRand"/>
+                            <span class="slider"></span>
+                        </label>
+                        <p>True random</p>
                     </div>
                     <div class="settingPanel">
                         <label class="toggle">
@@ -115,13 +122,6 @@
                             <span class="slider"></span>
                         </label>
                         <p>Reverse mode</p>
-                    </div>
-                    <div class="settingPanel">
-                        <label class="toggle">
-                            <input type="checkbox" class="setting" id="ms-trueRand"/>
-                            <span class="slider"></span>
-                        </label>
-                        <p>True random</p>
                     </div>
                 </div>
             </div>
