@@ -117,19 +117,29 @@ button {
     display: flex;
     margin-top: .8rem;
     border-radius: 1rem;
-    background-color: teal;
+    color: GrayText;
 }
 
 #tsumorow{
     display: flex;
     margin: .5rem;
     border-radius: 1rem;
-    background-color: chocolate;
+    color: GrayText;
 }
 
 .greyed {
     color: GrayText;
     background-color: Canvas;
+}
+
+.dealLit {
+    color: white;
+    background-color: chocolate;
+}
+
+.tsumoLit {
+    color: white;
+    background-color: teal;
 }
 
 .lit{
@@ -149,30 +159,16 @@ button {
 }
 
 
-#dealFlag{
+#nonFlag, #tsumoFlag {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-left-width: 1px;
 }
 
-#nonFlag {
+#dealFlag, #ronFlag {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-right-width: 1px;
-
-}
-
-#tsumoFlag{
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-left-width: 1px;
-}
-
-#ronFlag{
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-right-width: 1px;
-
 }
 
 #score{
@@ -183,7 +179,7 @@ button {
     justify-content: center;
 }
 
-#pays{
+#box1{
     border: 2px solid buttonborder;
     border-radius: 1rem;
     height: 2.5rem;
@@ -194,7 +190,7 @@ button {
     justify-content: center;
 }
 
-#dealerPays{
+#box2{
     border: 2px solid buttonborder;
     border-radius: 1rem;
     height: 2rem;
@@ -275,7 +271,8 @@ button {
 }
 
 #settingsContent{
-    height: 20rem;
+    margin-top: 4rem;
+    height: 26rem;
     width: 18rem;
 }
 
@@ -495,4 +492,78 @@ input[type="range"] {
 
 .ranges, .settingPanel{
     transition: filter 300ms;
+}
+
+/* For dealer only / ron only toggles */
+
+.tripleSwitch {
+  position: relative;
+  height: 2rem;
+  width: 18rem;
+  margin-bottom: 1.5rem;
+  background: #F2F2F2;
+  background: #D7D7D7;
+  border-radius: 2rem;
+}
+
+.switch-label {
+  font-weight: bold;
+  position: relative;
+  z-index: 2;
+  float: left;
+  width: 6rem;
+  line-height: 2rem;
+  font-size: .75rem;
+  color: #676a6c;
+  text-align: center;
+  cursor: pointer;
+}
+
+.switch-input {
+  display: none;
+}
+
+.switch-input:checked + .switch-label {
+  color: #FFF;
+  transition: 0.15s ease-out;
+  transition-property: color, text-shadow;
+}
+
+.switch-input:checked + .switch-label-D ~ .switch-selector {
+  transform: translateX(0%);
+  background-color: #f8ac59;
+}
+.switch-input:checked + .switch-label-BD ~ .switch-selector {
+  transform: translateX(100%);
+  background-color: #f8ac59;
+}
+.switch-input:checked + .switch-label-N ~ .switch-selector {
+  transform: translateX(200%);
+  background-color: #f8ac59;
+}
+
+.switch-input:checked + .switch-label-R ~ .switch-selector {
+  transform: translateX(0%);
+  background-color: #1AB394;
+}
+.switch-input:checked + .switch-label-BR ~ .switch-selector {
+  transform: translateX(100%);
+  background-color: #1AB394
+}
+.switch-input:checked + .switch-label-T ~ .switch-selector {
+  transform: translateX(200%);
+  background-color: #1AB394;
+}
+
+.switch-selector {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 6rem;
+    height: 2rem;
+    border-radius: 2rem;
+    background-color: #1ab394;
+    transition: all 0.3s;
 }

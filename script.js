@@ -92,8 +92,8 @@ var settingHints;
 //Scoreboxes
 let box2Enabled = false;
 let selectedBox = 1;
-const pays = document.getElementById("pays");
-const dealerPays = document.getElementById("dealerPays");
+const ansBox1 = document.getElementById("box1");
+const ansBox2 = document.getElementById("box2");
 
 //Dialogs
 //failed guess popup
@@ -148,6 +148,13 @@ const maxFuSlider = document.getElementById('maxFuSlider');
 const minFuLabel = document.getElementById('minFuLabel');
 const maxFuLabel = document.getElementById('maxFuLabel');
 
+const dealOnlySwitch = document.getElementById('switch-D');
+const dealBothSwitch = document.getElementById('switch-BD');
+const nonOnlySwitch = document.getElementById('switch-N');
+const ronOnlySwitch = document.getElementById('switch-R');
+const ronBothSwitch = document.getElementById('switch-BR');
+const tsumoOnlySwitch = document.getElementById('switch-T');
+
 const weightedSwitch = document.getElementById('ms-weighted');
 const randomSwitch = document.getElementById('ms-random');
 const kiriageSwitch = document.getElementById('ms-kiriage');
@@ -171,7 +178,7 @@ let streak = 0;
 toastr.options = {
   "closeButton": false,
   "debug": false,
-  "newestOnTop": false,
+  "newestOnTop": true,
   "progressBar": false,
   "positionClass": "toast-top-center",
   "preventDuplicates": false,
@@ -189,6 +196,7 @@ toastr.options = {
 
 
 function startGame(){
+    streak = 0;
     // apply settings
     minHan = hanList[minHanSlider.value];
     maxHan = hanList[maxHanSlider.value];
@@ -204,10 +212,14 @@ function startGame(){
     autocheckMode = autocheckSwitch.checked;
     reverseMode = reverseSwitch.checked;
     trueRandomMode = trueRandomSwitch.checked;
+    dealerEnabled = !nonOnlySwitch.checked;
+    nonDealerEnabled = !dealOnlySwitch.checked;
+    ronEnabled = !tsumoOnlySwitch.checked;
+    tsumoEnabled = !ronOnlySwitch.checked;
     if (baseMode || reverseMode || (!tsumoEnabled && !nonDealerEnabled)) {
-        dealerPays.style.display = "none";
+        ansBox2.style.display = "none";
     } else {
-        dealerPays.style.display = "";
+        ansBox2.style.display = "";
     };
     if (shorthandMode) {
         digitLimit = 3;
@@ -227,17 +239,10 @@ function startGame(){
         document.getElementById('enterBtn').style.display = "";
     };
     // create list of hints 
-    if (!trueRandomMode) {
-        generateHintList();
-    };
-    //Ensure hint list generated successfully
-    if (hintList.length === 0) {
-        alert("No questions could be generated, please adjust your han/fu range settings");
-    } else {
-        //Close the settings window (if it's open) and start the game by loading the first hint
-        settingsDialog.close();
-        newHint();
-    };
+    generateHintList();
+    //Close the settings window (if it's open) and start the game by loading the first hint
+    settingsDialog.close();
+    newHint();
 };
 
 function generateHintList(){
@@ -259,6 +264,10 @@ function generateHintList(){
             };
         };
     };
+    if (hintList.length === 0) {
+        hintList.push([13,"",true,false]);
+        toastr["warning"]("No questions could be generated. Please adjust your han/fu settings");
+    };
     if (randomMode) {
         shuffle(hintList);
     };
@@ -266,45 +275,56 @@ function generateHintList(){
 
 function generateHints() {
     var hint;
-    //      han,fu,tsumo,dealer
-    hint = [han,fu,false,false];
-    addHint(hint);
-    if (!baseMode) {
+    //hint is formatted as: [han,fu,tsumo,dealer]
+    if (baseMode) {
         hint = [han,fu,false,true];
         addHint(hint);
-        hint = [han,fu,true,true];
-        addHint(hint);
-        hint = [han,fu,true,false];
-        addHint(hint);
+    } else {
+        if (ronEnabled && dealerEnabled) {
+            hint = [han,fu,false,true];
+            addHint(hint);
+        };
+        if (ronEnabled && nonDealerEnabled) {
+            hint = [han,fu,false,false];
+            addHint(hint);
+        };
+        if (tsumoEnabled && dealerEnabled ) {
+            hint = [han,fu,true,true];
+            addHint(hint);
+        };
+        if (tsumoEnabled && nonDealerEnabled) {
+            hint = [han,fu,true,false];
+            addHint(hint);
+        };
     };
 };
 
 function addHint(hint) {
     if (!checkImpossible(hint)) {
-        hintList.push(hint)
-    }
-}
+        hintList.push(hint);
+    };
+};
 
 function newHint() {
-    popup.close()
+    popup.close();
     if (trueRandomMode) {
-        newRandomHint()
+        newRandomHint();
     } else {
-        nextListHint()
-    }
-    loadHint(han,fu,dealer,tsumo)
-}
+        nextListHint();
+    };
+    loadHint();
+};
 
 function nextListHint() {
-    han = hintList[iHint][0];
-    fu = hintList[iHint][1];
-    tsumo = hintList[iHint][2];
-    dealer = hintList[iHint][3];
-    iHint ++;
     if (iHint == hintList.length){
         generateHintList();
-    }
-}
+    };
+    han = hintList[iHint][0];
+    fu = hintList[iHint][1];
+    dealer = hintList[iHint][2];
+    tsumo = hintList[iHint][3];
+    iHint ++;
+};
 
 //For ListRandom
 function shuffle(array) {
@@ -320,39 +340,39 @@ function shuffle(array) {
     // And swap it with the current element.
     [array[currentIndex], array[randomIndex]] = [
       array[randomIndex], array[currentIndex]];
-  }
-}
+  };
+};
 
 //TrueRandom
 function newRandomHint() {
-    han = hList[Math.floor(Math.random() * hList.length)]
-    fu = fList[Math.floor(Math.random() * fList.length)]
+    han = hList[Math.floor(Math.random() * hList.length)];
+    fu = fList[Math.floor(Math.random() * fList.length)];
     if (weightedMode){
-        dealer = Math.random() < .33
+        dealer = Math.random() < .33;
     } else {
-        dealer = Math.random() < .5
-    }
-    tsumo = Math.random() < .5
+        dealer = Math.random() < .5;
+    };
+    tsumo = Math.random() < .5;
     while (checkImpossible([han,fu,tsumo]) == true){
-        fu = fList[Math.floor(Math.random() * fList.length)]
-    }
-}
+        fu = fList[Math.floor(Math.random() * fList.length)];
+    };
+};
 
-function loadHint(han,fu,dealer,tsumo){
+function loadHint(){
     //initialize values
     selectedBox = 1;
-    pays.textContent = "";
-    dealerPays.textContent = "";
+    ansBox1.textContent = "";
+    ansBox2.textContent = "";
     settingHints = true;
 
-    //grey out dealer pays box
+    //grey out box 2
     if (dealer || !tsumo || baseMode){
-        dealerPays.style.borderColor = "rgb(44, 44, 44)";
+        ansBox2.style.borderColor = "rgb(44, 44, 44)";
         box2Enabled = false;
         
     } else {
         box2Enabled = true;
-        dealerPays.style.borderColor = 'ButtonBorder';
+        ansBox2.style.borderColor = 'ButtonBorder';
     };
 
     //Populate boxes, timeout makes them populate and animate one at a time
@@ -380,20 +400,15 @@ function loadHint(han,fu,dealer,tsumo){
             timeout += 200;
     };
 
-    if (baseMode) {
-        nonFlag.classList.add('greyed');
-        dealFlag.classList.add('greyed');
-        ronFlag.classList.add('greyed');
-        tsumoFlag.classList.add('greyed');
-    } else {
+    if (!baseMode) {
         setTimeout(()=> {
             if (dealer){
-                nonFlag.classList.add('greyed');
-                dealFlag.classList.remove('greyed');
+                nonFlag.classList.remove('dealLit');
+                dealFlag.classList.add('dealLit');
                 animateCSS(dealFlag, 'pulse','0.5s');
             } else {
-                dealFlag.classList.add('greyed');
-                nonFlag.classList.remove('greyed');
+                dealFlag.classList.remove('dealLit');
+                nonFlag.classList.add('dealLit');
                 animateCSS(nonFlag, 'pulse','0.5s');
             };
         }, timeout);
@@ -401,12 +416,12 @@ function loadHint(han,fu,dealer,tsumo){
 
         setTimeout(()=> {
             if (tsumo){
-                ronFlag.classList.add('greyed');
-                tsumoFlag.classList.remove('greyed');
+                ronFlag.classList.remove('tsumoLit');
+                tsumoFlag.classList.add('tsumoLit');
                 animateCSS(tsumoFlag, 'pulse','0.5s');
             } else {
-                tsumoFlag.classList.add('greyed');
-                ronFlag.classList.remove('greyed');
+                tsumoFlag.classList.remove('tsumoLit');
+                ronFlag.classList.add('tsumoLit');
                 animateCSS(ronFlag, 'pulse','0.5s');
             };
         }, timeout);
@@ -423,21 +438,21 @@ function loadHint(han,fu,dealer,tsumo){
 
 function toggleLitScore(){
     if (selectedBox == 1) {
-        pays.style.borderColor = 'gainsboro';
-        animateCSS(pays, 'pulse','0.5s');
+        ansBox1.style.borderColor = 'gainsboro';
+        animateCSS(ansBox1, 'pulse','0.5s');
         if (box2Enabled){
-            dealerPays.style.borderColor = 'buttonborder';
+            ansBox2.style.borderColor = 'buttonborder';
             if (settingHints) {
                 setTimeout(()=> {
-                    animateCSS(dealerPays, 'pulse','0.5s');
+                    animateCSS(ansBox2, 'pulse','0.5s');
                 }, 200);
             };
         };
     } else {
-        pays.style.borderColor = 'buttonborder';
+        ansBox1.style.borderColor = 'buttonborder';
         if (box2Enabled){
-            dealerPays.style.borderColor = 'gainsboro';
-            animateCSS(dealerPays, 'pulse','0.5s');
+            ansBox2.style.borderColor = 'gainsboro';
+            animateCSS(ansBox2, 'pulse','0.5s');
         };
     };
 };
@@ -479,9 +494,9 @@ document.getElementById("keyboard-cont").addEventListener("click", (e) => {
 document.addEventListener("keyup", (e) => {
     var scoreBox;
     if (selectedBox == 1){
-        scoreBox = pays;
+        scoreBox = ansBox1;
     } else {
-        scoreBox = dealerPays;
+        scoreBox = ansBox2;
     }
 
     let pressedKey = String(e.key);
@@ -525,7 +540,7 @@ document.addEventListener("keyup", (e) => {
     if (!found || found.length > 1) {
         return;
     } else {
-        if (scoreBox.textContent.length != digitLimit && !settingHints){
+        if (scoreBox.textContent.length != digitLimit /*&& !settingHints*/){
             insertDigit(pressedKey,scoreBox);
         };
     };
@@ -559,13 +574,13 @@ function deleteDigit (scoreBox) {
 };
 
 //Switch boxes
-pays.addEventListener("click", function() {
+ansBox1.addEventListener("click", function() {
     if (!autocheckMode) {
         selectedBox = 1;
         toggleLitScore();
     };
 });
-dealerPays.addEventListener("click", function() {
+ansBox2.addEventListener("click", function() {
     if (!autocheckMode && box2Enabled) {
         selectedBox = 2;
         toggleLitScore();
@@ -574,8 +589,8 @@ dealerPays.addEventListener("click", function() {
 
 //Evaluate the guess and return correct or incorrect popup
 function checkGuess() {
-    let guess1 = pays.textContent;
-    let guess2 = dealerPays.textContent;
+    let guess1 = ansBox1.textContent;
+    let guess2 = ansBox2.textContent;
     if (guess1 == ""){
         selectedBox = 1;
         toggleLitScore();
@@ -645,11 +660,11 @@ function checkGuess() {
         //points round to the next 100
         answer1 = Math.ceil(answer1 / 100) * 100;
         answer2 = Math.ceil(answer2 / 100) * 100;
-        if (shorthandMode) {
-            answer1 = chop(answer1);
-            if (answer2 > 0) {
-                answer2 = chop(answer2);
-            };
+    };
+    if (shorthandMode) {
+        answer1 = chop(answer1);
+        if (answer2 > 0) {
+            answer2 = chop(answer2);
         };
     };
     
@@ -659,11 +674,7 @@ function checkGuess() {
         let ans1String = String(answer1);
         let ans2String = String(answer2);
         digitLimit = selectedBox == 1 ? ans1String.length : ans2String.length;
-        if (selectedBox == 1) {
-            correct = scrutinizeGuess(guess1, ans1String);
-        } else {
-            correct = scrutinizeGuess(guess2, ans2String);
-        };
+        correct = selectedBox == 1 ? scrutinizeGuess(guess1, ans1String) : scrutinizeGuess(guess2, ans2String);
         if (box2Enabled) {
             if (guess2.length == ans2String.length) {
                 moveOn = true;
@@ -702,8 +713,8 @@ function checkGuess() {
 //For shorthand mode, removes 00 from the end of the answers
 function chop(num) {
     var ans = String(num);
-    ans = ans.slice(0, ans.length - 2);
-    return Number(ans)
+    ans = baseMode ? ans.slice(0, ans.length - 1) : ans.slice(0, ans.length - 2);
+    return Number(ans);
 };
 
 //For autocheck mode, checks every digit 
@@ -722,7 +733,7 @@ const animateCSS = (element, animation, duration, prefix = 'animate__') =>
   new Promise((resolve, reject) => {
     if (duration == undefined){
         duration = '0.1s';
-    }
+    };
     const animationName = `${prefix}${animation}`;
     const node = element
     node.style.setProperty('--animate-duration', String(duration));
@@ -732,7 +743,7 @@ const animateCSS = (element, animation, duration, prefix = 'animate__') =>
       event.stopPropagation();
       node.classList.remove(`${prefix}animated`, animationName);
       resolve('Animation ended');
-    }
+    };
     node.addEventListener('animationend', handleAnimationEnd, {once: true});
 });
 
@@ -754,36 +765,37 @@ function closeSettings() {
 
 //Sliders Code
 function controlSlider(max, minSlider, maxSlider, Label, labelList) {
-  const [from, to] = getParsed(minSlider, maxSlider);
-  fillSlider(minSlider, maxSlider, maxSlider);
-  if (max) {
-    if (from <= to) {
-        maxSlider.value = to;
-        Label.textContent = labelList[to];
-        
+    settingsChanged = true;
+    const [from, to] = getParsed(minSlider, maxSlider);
+    fillSlider(minSlider, maxSlider, maxSlider);
+    if (max) {
+        if (from <= to) {
+            maxSlider.value = to;
+            Label.textContent = labelList[to];
+            
+        } else {
+            maxSlider.value = from;
+            Label.textContent = labelList[from];
+        };
+        setToggleAccessible(maxSlider, minSlider);
     } else {
-        maxSlider.value = from;
-        Label.textContent = labelList[from];
+        if (from > to) {
+            minSlider.value = to;
+            Label.textContent = labelList[to];
+        } else {
+            minSlider.value = from;
+            Label.textContent = labelList[from];
+        };
     };
-    setToggleAccessible(maxSlider, minSlider);
-  } else {
-    if (from > to) {
-        minSlider.value = to;
-        Label.textContent = labelList[to];
-    } else {
-        minSlider.value = from;
-        Label.textContent = labelList[from];
-    };
-  };
 };
 
 function setToggleAccessible(currSlider, otherSlider) {
-  if (Number(currSlider.value) <= 0 || currSlider.value == otherSlider.value) {
-    currSlider.style.zIndex = 2;
-  } else {
-    currSlider.style.zIndex = 0;
-  }
-}
+    if (Number(currSlider.value) <= 0 || currSlider.value == otherSlider.value) {
+        currSlider.style.zIndex = 2;
+    } else {
+        currSlider.style.zIndex = 0;
+    };
+};
 
 function getParsed(currentFrom, currentTo) {
   const from = parseInt(currentFrom.value, 10);
@@ -813,6 +825,9 @@ minHanSlider.oninput = () => {
         document.getElementById('fuRange').classList.remove('dimmed');
     };
 };
+maxHanSlider.oninput = () => controlSlider(true, minHanSlider, maxHanSlider, maxHanLabel, hanList);
+minFuSlider.oninput = () => controlSlider(false, minFuSlider, maxFuSlider, minFuLabel, fuList);
+maxFuSlider.oninput = () => controlSlider(true, minFuSlider, maxFuSlider, maxFuLabel, fuList);
 
 //Dim sliders and switches when reverse mode enabled
 reverseSwitch.oninput = () => {
@@ -825,13 +840,19 @@ reverseSwitch.oninput = () => {
         elements.forEach(element => {
             element.classList.remove('dimmed');
         });
+    };
+};
+
+baseSwitch.oninput = () => {
+    let trips = document.getElementById('triples');
+    if (baseSwitch.checked) {
+        trips.classList.add('dimmed');
+    } else{
+        trips.classList.remove('dimmed');
     }
 }
-maxHanSlider.oninput = () => controlSlider(true, minHanSlider, maxHanSlider, maxHanLabel, hanList);
-minFuSlider.oninput = () => controlSlider(false, minFuSlider, maxFuSlider, minFuLabel, fuList);
-maxFuSlider.oninput = () => controlSlider(true, minFuSlider, maxFuSlider, maxFuLabel, fuList);
-baseSwitch.oninput = () => shorthandSwitch.checked = false;
-shorthandSwitch.oninput = () => baseSwitch.checked = false;
+
+//TrueRandom cannot be enabled without Random enabled also
 trueRandomSwitch.oninput = () => {
     if (trueRandomSwitch.checked) {
         randomSwitch.checked = true;
@@ -846,10 +867,6 @@ minHanSlider.value = 0;
 maxHanSlider.value = 12;
 minFuSlider.value = 0;
 maxFuSlider.value = 10;
-nonDealerEnabled = true;
-dealerEnabled = true;
-ronEnabled = true;
-tsumoEnabled = true;
 weightedSwitch.checked = false;
 randomSwitch.checked = false;
 baseSwitch.checked = false;
@@ -858,6 +875,8 @@ kiriageSwitch.checked = false;
 autocheckSwitch.checked = false;
 reverseSwitch.checked = false;
 trueRandomSwitch.checked = false;
+dealBothSwitch.checked = true;
+ronBothSwitch.checked = true;
 settingsChanged = true;
 fillSlider(minHanSlider, maxHanSlider, maxHanSlider);
 fillSlider(minFuSlider, maxFuSlider, maxFuSlider);
