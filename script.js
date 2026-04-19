@@ -76,6 +76,9 @@ var fu;
 var dealer;
 var tsumo;
 let hintList = [];
+var base;
+var answer1;
+var answer2;
 
 //Hint visuals
 const hanBox = document.getElementById("hanBox");
@@ -198,12 +201,6 @@ toastr.options = {
 function startGame(){
     streak = 0;
     // apply settings
-    minHan = hanList[minHanSlider.value];
-    maxHan = hanList[maxHanSlider.value];
-    if (minHan < 5) {
-        minFu = fuList[minFuSlider.value];
-        maxFu = fuList[maxFuSlider.value];
-    }
     weightedMode = weightedSwitch.checked;
     randomMode = randomSwitch.checked;
     baseMode = baseSwitch.checked;
@@ -216,6 +213,26 @@ function startGame(){
     nonDealerEnabled = !dealOnlySwitch.checked;
     ronEnabled = !tsumoOnlySwitch.checked;
     tsumoEnabled = !ronOnlySwitch.checked;
+    if (reverseMode) {
+        minHan = hanList[0];
+        maxHan = hanList[3];
+        minFu = fuList[0];
+        maxFu = fuList[4];
+        weightedMode = false;
+        baseMode = false;
+        trueRandomMode = false;
+        shorthandMode = false;
+        kiriageMode = false;
+        autocheckMode = false;
+        //TODO add autocheck for reverse mode
+    } else {
+        minHan = hanList[minHanSlider.value];
+        maxHan = hanList[maxHanSlider.value];
+        if (minHan < 5) {
+            minFu = fuList[minFuSlider.value];
+            maxFu = fuList[maxFuSlider.value];
+        };
+    };
     if (baseMode || reverseMode || (!tsumoEnabled && !nonDealerEnabled)) {
         ansBox2.style.display = "none";
     } else {
@@ -275,17 +292,17 @@ function generateHintList(){
 
 function generateHints() {
     var hint;
-    //hint is formatted as: [han,fu,tsumo,dealer]
+    //hint is formatted as: [han,fu,dealer,tsumo]
     if (baseMode) {
         hint = [han,fu,false,true];
         addHint(hint);
     } else {
-        if (ronEnabled && dealerEnabled) {
-            hint = [han,fu,false,true];
-            addHint(hint);
-        };
         if (ronEnabled && nonDealerEnabled) {
             hint = [han,fu,false,false];
+            addHint(hint);
+        };
+        if (ronEnabled && dealerEnabled) {
+            hint = [han,fu,false,true];
             addHint(hint);
         };
         if (tsumoEnabled && dealerEnabled ) {
@@ -305,27 +322,6 @@ function addHint(hint) {
     };
 };
 
-function newHint() {
-    popup.close();
-    if (trueRandomMode) {
-        newRandomHint();
-    } else {
-        nextListHint();
-    };
-    loadHint();
-};
-
-function nextListHint() {
-    if (iHint == hintList.length){
-        generateHintList();
-    };
-    han = hintList[iHint][0];
-    fu = hintList[iHint][1];
-    dealer = hintList[iHint][2];
-    tsumo = hintList[iHint][3];
-    iHint ++;
-};
-
 //For ListRandom
 function shuffle(array) {
   let currentIndex = array.length;
@@ -343,19 +339,144 @@ function shuffle(array) {
   };
 };
 
+function newHint() {
+    popup.close();
+    if (trueRandomMode) {
+        newRandomHint();
+    } else {
+        nextListHint();
+    };
+    [answer1, answer2] = calcAnswer();
+    console.log(answer1)
+    console.log(answer2)
+    loadHint();
+};
+
 //TrueRandom
 function newRandomHint() {
-    han = hList[Math.floor(Math.random() * hList.length)];
-    fu = fList[Math.floor(Math.random() * fList.length)];
-    if (weightedMode){
-        dealer = Math.random() < .33;
+    let hanFiltered = [];
+    let fuFiltered = [];
+    hList.forEach((item) => {
+        if (item >= minHan && item <= maxHan ) {
+            hanFiltered.push(item);
+        };
+    });
+    fList.forEach((item) => {
+        if (item >= minFu && item <= maxFu) {
+            fuFiltered.push(item);
+        };
+    });
+    han = hanFiltered[Math.floor(Math.random() * hanFiltered.length)];
+    fu = fuFiltered[Math.floor(Math.random() * fuFiltered.length)];
+    if (dealerEnabled && nonDealerEnabled) {
+        if (weightedMode){
+            dealer = Math.random() < .33;
+        } else {
+            dealer = Math.random() < .5;
+        };
     } else {
-        dealer = Math.random() < .5;
+        if (dealerEnabled) {
+            dealer = true;
+        } else {
+            dealer = false;
+        };
     };
-    tsumo = Math.random() < .5;
+    if (tsumoEnabled && ronEnabled) {
+        tsumo = Math.random() < .5;
+    } else {
+        if (tsumoEnabled) {
+            tsumo = true;
+        } else {
+            tsumo = false;
+        };
+    };
     while (checkImpossible([han,fu,tsumo]) == true){
         fu = fList[Math.floor(Math.random() * fList.length)];
     };
+};
+
+function nextListHint() {
+    if (iHint == hintList.length){
+        generateHintList();
+    };
+    han = hintList[iHint][0];
+    fu = hintList[iHint][1];
+    dealer = hintList[iHint][2];
+    tsumo = hintList[iHint][3];
+    iHint ++;
+};
+
+function calcAnswer() {
+    base = 0;
+    let pts1 = 0;
+    let pts2 = 0;
+    console.log(han)
+    console.log(fu)
+    switch (han) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+            base = fu * 2 ** (2 + han);
+            if (base > 2000 || (kiriageMode && base > 1900)) {
+                base = 2000;
+            };
+            break;
+        case 5:
+            base = 2000;
+            break;
+        case 6:
+        case 7:
+            base = 3000;
+            break;
+        case 8:
+        case 9:
+        case 10:
+            base = 4000;
+            break;
+        case 11:
+        case 12:
+            base = 6000;
+            break;
+        case 13:
+            base = 8000;
+            break;
+    };
+    if (baseMode) {
+        pts1 = base;
+    } else {
+        if (tsumo){
+            if (dealer) {
+                pts1 = base * 2;
+            } else {
+                pts1 = base;
+                pts2 = base * 2;
+            };
+        } else {
+            if (dealer) {
+                pts1 = base * 6;
+            } else {
+                pts1 = base * 4;
+            };
+        };
+        //points round to the next 100
+        pts1 = Math.ceil(pts1 / 100) * 100;
+        pts2 = Math.ceil(pts2 / 100) * 100;
+    };
+    if (shorthandMode) {
+        pts1 = chop(pts1);
+        if (pts2 > 0) {
+            pts2 = chop(pts2);
+        };
+    };
+    return [pts1, pts2];
+};
+
+//For shorthand mode, removes 00 from the end of the answers
+function chop(num) {
+    var ans = String(num);
+    ans = baseMode ? ans.slice(0, ans.length - 1) : ans.slice(0, ans.length - 2);
+    return Number(ans);
 };
 
 function loadHint(){
@@ -377,27 +498,32 @@ function loadHint(){
 
     //Populate boxes, timeout makes them populate and animate one at a time
     var timeout = 200;
-    setTimeout(()=> {
-        hanBox.textContent = han;
-        animateCSS(hanBox, 'pulse','0.5s');
-    }, timeout);
-    timeout += 200;
-
-    setTimeout(()=> {
-        if (han > 4){
-            fuBox.classList.add('greyed');
-            fuText.classList.add('greyed');
-        } else {
-            fuBox.classList.remove('greyed');
-            fuText.classList.remove('greyed');
-        };
+    if (!reverseMode) {
+        setTimeout(()=> {
+            hanBox.textContent = han;
+            animateCSS(hanBox, 'pulse','0.5s');
+        }, timeout);
+        timeout += 200;
+        setTimeout(()=> {
+            if (han > 4){
+                fuBox.classList.add('greyed');
+                fuText.classList.add('greyed');
+            } else {
+                fuBox.classList.remove('greyed');
+                fuText.classList.remove('greyed');
+            };
+            if (!(fuBox.textContent == "" && fu == "")) {
+                animateCSS(fuBox, 'pulse','0.5s');
+            };
+            fuBox.textContent = fu;
+        }, timeout);
         if (!(fuBox.textContent == "" && fu == "")) {
-            animateCSS(fuBox, 'pulse','0.5s');
+                timeout += 200;
         };
-        fuBox.textContent = fu;
-    }, timeout);
-    if (!(fuBox.textContent == "" && fu == "")) {
-            timeout += 200;
+    } else {
+        hanBox.textContent = '';
+        fuBox.textContent = '';
+        ansBox1.style.borderColor = 'buttonborder';
     };
 
     if (!baseMode) {
@@ -428,32 +554,63 @@ function loadHint(){
         timeout += 200;
     };
 
+    if (reverseMode) {
+        timeout = populateScoreBoxes(timeout);
+    };
+
     setTimeout(()=> {
         toggleLitScore()
         settingHints = false;
-    }, timeout)
+    }, timeout);
     timeout += 200;
+};
 
+function populateScoreBoxes(t) {
+    setTimeout(()=> {
+        ansBox1.textContent = answer1;
+        animateCSS(ansBox1, 'pulse','0.5s');
+    }, t);
+    t += 200;
+    if (box2Enabled) {
+        setTimeout(()=> {
+            ansBox2.textContent = answer2;
+            animateCSS(ansBox2, 'pulse','0.5s');
+        }, t);
+        t += 200;
+    };
+    return t;
 };
 
 function toggleLitScore(){
     if (selectedBox == 1) {
-        ansBox1.style.borderColor = 'gainsboro';
-        animateCSS(ansBox1, 'pulse','0.5s');
-        if (box2Enabled){
-            ansBox2.style.borderColor = 'buttonborder';
-            if (settingHints) {
-                setTimeout(()=> {
-                    animateCSS(ansBox2, 'pulse','0.5s');
-                }, 200);
+        if (!reverseMode) {
+            ansBox1.style.borderColor = 'gainsboro';
+            animateCSS(ansBox1, 'pulse','0.5s');
+            if (box2Enabled){
+                ansBox2.style.borderColor = 'buttonborder';
+                if (settingHints) {
+                    setTimeout(()=> {
+                        animateCSS(ansBox2, 'pulse','0.5s');
+                    }, 200);
+                };
             };
+        } else {
+            hanBox.style.borderColor = 'gainsboro';
+            fuBox.style.borderColor = 'buttonborder';
+            animateCSS(hanBox, 'pulse','0.5s');
         };
     } else {
-        ansBox1.style.borderColor = 'buttonborder';
-        if (box2Enabled){
-            ansBox2.style.borderColor = 'gainsboro';
-            animateCSS(ansBox2, 'pulse','0.5s');
-        };
+        if (!reverseMode){
+            ansBox1.style.borderColor = 'buttonborder';
+            if (box2Enabled){
+                ansBox2.style.borderColor = 'gainsboro';
+                animateCSS(ansBox2, 'pulse','0.5s');
+            };
+        } else {
+            hanBox.style.borderColor = 'buttonborder';
+            fuBox.style.borderColor = 'gainsboro';
+            animateCSS(fuBox, 'pulse','0.5s');
+        }
     };
 };
     
@@ -488,16 +645,18 @@ document.getElementById("keyboard-cont").addEventListener("click", (e) => {
     };
 
     document.dispatchEvent(new KeyboardEvent("keyup", {'key': key}));
-})
+});
 
 //Typing on keyboard
 document.addEventListener("keyup", (e) => {
     var scoreBox;
-    if (selectedBox == 1){
-        scoreBox = ansBox1;
+    if (selectedBox == 1) {
+        scoreBox = reverseMode ? hanBox : ansBox1;
+        digitLimit = reverseMode ? 1 : String(answer1).length;
     } else {
-        scoreBox = ansBox2;
-    }
+        scoreBox = reverseMode ? fuBox : ansBox2;
+        digitLimit = reverseMode ? 2 : String(answer2).length;
+    };
 
     let pressedKey = String(e.key);
     let k = null;
@@ -555,7 +714,7 @@ function insertDigit(pressedKey,scoreBox){
         };
     };
     if (scoreBox.textContent.length == digitLimit){
-        if (box2Enabled){
+        if (box2Enabled || reverseMode){
             selectedBox = 2;
             toggleLitScore();
         };
@@ -564,24 +723,37 @@ function insertDigit(pressedKey,scoreBox){
 
 //Delete digits from the guess box
 function deleteDigit (scoreBox) {
-    if (!autocheckMode) {
-        scoreBox.textContent = scoreBox.textContent.slice(0,scoreBox.textContent.length - 1);
-    }
     if (scoreBox.textContent.length == 0) {
         selectedBox = 1;
         toggleLitScore();
     };
+    if (!autocheckMode) {
+        scoreBox.textContent = scoreBox.textContent.slice(0,scoreBox.textContent.length - 1);
+    }
 };
 
 //Switch boxes
 ansBox1.addEventListener("click", function() {
-    if (!autocheckMode) {
+    if (!autocheckMode && !reverseMode) {
         selectedBox = 1;
         toggleLitScore();
     };
 });
 ansBox2.addEventListener("click", function() {
-    if (!autocheckMode && box2Enabled) {
+    if (!autocheckMode && !reverseMode && box2Enabled) {
+        selectedBox = 2;
+        toggleLitScore();
+    };
+});
+//Switch boxes in reverse mode
+hanBox.addEventListener("click", function() {
+    if (reverseMode) {
+        selectedBox = 1;
+        toggleLitScore();
+    };
+});
+fuBox.addEventListener("click", function() {
+    if (reverseMode) {
         selectedBox = 2;
         toggleLitScore();
     };
@@ -589,8 +761,16 @@ ansBox2.addEventListener("click", function() {
 
 //Evaluate the guess and return correct or incorrect popup
 function checkGuess() {
-    let guess1 = ansBox1.textContent;
-    let guess2 = ansBox2.textContent;
+    var guess1;
+    var guess2;
+    if (!reverseMode) {
+        guess1 = ansBox1.textContent;
+        guess2 = ansBox2.textContent;
+    } else {
+        han = Number(hanBox.textContent);
+        fu = Number(fuBox.textContent);
+        [guess1, guess2] = calcAnswer();
+    };
     if (guess1 == ""){
         selectedBox = 1;
         toggleLitScore();
@@ -601,79 +781,15 @@ function checkGuess() {
             toggleLitScore();
             return;
         };
-    }
-    let base = 0;
-    let answer1 = 0;
-    let answer2 = 0;
-    let correct = true;
-    let moveOn = true;
-    switch (han) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-            base = fu * 2 ** (2 + han);
-            if (base > 2000) {
-                base = 2000;
-            }
-            break;
-        case 5:
-            base = 2000;
-            break;
-        case 6:
-        case 7:
-            base = 3000;
-            break;
-        case 8:
-        case 9:
-        case 10:
-            base = 4000;
-            break;
-        case 11:
-        case 12:
-            base = 6000;
-            break;
-        case 13:
-            base = 8000;
-            break;
-    };
-    if (kiriageMode && base > 1900) {
-        base = 2000;
-    };
-    if (baseMode) {
-        answer1 = base;
-    } else {
-        if (tsumo){
-            if (dealer) {
-                answer1 = base * 2;
-            } else {
-                answer1 = base;
-                answer2 = base * 2;
-            };
-        } else {
-            if (dealer) {
-                answer1 = base * 6;
-            } else {
-                answer1 = base * 4;
-            };
-        };
-        //points round to the next 100
-        answer1 = Math.ceil(answer1 / 100) * 100;
-        answer2 = Math.ceil(answer2 / 100) * 100;
-    };
-    if (shorthandMode) {
-        answer1 = chop(answer1);
-        if (answer2 > 0) {
-            answer2 = chop(answer2);
-        };
     };
     
+    let correct = true;
+    let moveOn = true;
     //autocheck mode evaluates the guesses as they are typed
     if (autocheckMode) {
         moveOn = false;
         let ans1String = String(answer1);
         let ans2String = String(answer2);
-        digitLimit = selectedBox == 1 ? ans1String.length : ans2String.length;
         correct = selectedBox == 1 ? scrutinizeGuess(guess1, ans1String) : scrutinizeGuess(guess2, ans2String);
         if (box2Enabled) {
             if (guess2.length == ans2String.length) {
@@ -700,21 +816,20 @@ function checkGuess() {
         };
     } else {
         let ansText = document.getElementById("correctAns");
-        let message = answer1;
-        if (box2Enabled) {
-            message += " and " + answer2;
+        var message;
+        if (!reverseMode) {
+            message = answer1;
+            if (box2Enabled) {
+                message += " and " + answer2;
+            };
+        } else {
+            //TODO show overlaps
+            message = han + " han and " + fu + " fu";
         };
         ansText.textContent = message;
         popup.showModal();
         streak = 0;
     };
-};
-
-//For shorthand mode, removes 00 from the end of the answers
-function chop(num) {
-    var ans = String(num);
-    ans = baseMode ? ans.slice(0, ans.length - 1) : ans.slice(0, ans.length - 2);
-    return Number(ans);
 };
 
 //For autocheck mode, checks every digit 
@@ -822,6 +937,7 @@ minHanSlider.oninput = () => {
     if (hanList[minHanSlider.value] > 4) {
         document.getElementById('fuRange').classList.add('dimmed');
     } else {
+        if (!reverseSwitch.checked)
         document.getElementById('fuRange').classList.remove('dimmed');
     };
 };
@@ -867,8 +983,8 @@ minHanSlider.value = 0;
 maxHanSlider.value = 12;
 minFuSlider.value = 0;
 maxFuSlider.value = 10;
-weightedSwitch.checked = false;
-randomSwitch.checked = false;
+weightedSwitch.checked = true;
+randomSwitch.checked = true;
 baseSwitch.checked = false;
 shorthandSwitch.checked = false;
 kiriageSwitch.checked = false;

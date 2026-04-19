@@ -159,13 +159,13 @@ button {
 }
 
 
-#nonFlag, #tsumoFlag {
+#dealFlag, #tsumoFlag {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-left-width: 1px;
 }
 
-#dealFlag, #ronFlag {
+#nonFlag, #ronFlag {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-right-width: 1px;
@@ -529,7 +529,7 @@ input[type="range"] {
   transition-property: color, text-shadow;
 }
 
-.switch-input:checked + .switch-label-D ~ .switch-selector {
+.switch-input:checked + .switch-label-N ~ .switch-selector {
   transform: translateX(0%);
   background-color: #f8ac59;
 }
@@ -537,7 +537,7 @@ input[type="range"] {
   transform: translateX(100%);
   background-color: #f8ac59;
 }
-.switch-input:checked + .switch-label-N ~ .switch-selector {
+.switch-input:checked + .switch-label-D ~ .switch-selector {
   transform: translateX(200%);
   background-color: #f8ac59;
 }
@@ -566,4 +566,8 @@ input[type="range"] {
     border-radius: 2rem;
     background-color: #1ab394;
     transition: all 0.3s;
+}
+
+#trueRand {
+    visibility: hidden;
 }

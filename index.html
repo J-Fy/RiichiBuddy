@@ -65,18 +65,18 @@
             </div>
             <div class="ranges nonrev" id="triples">
                 <div class="tripleSwitch">
-                    <input id="switch-D" name="dealTrip" type="radio" value="Y" class="switch-input setting" />
-                    <label for="switch-D" class="switch-label switch-label-D">Dealer Only</label>
-                    <input id="switch-BD" name="dealTrip" type="radio" value="I" class="switch-input setting" checked />
-                    <label for="switch-BD" class="switch-label switch-label-BD">Both</label>
                     <input id="switch-N" name="dealTrip" type="radio" value="N" class="switch-input setting" />
                     <label for="switch-N" class="switch-label switch-label-N">Non-Dealer Only</label>
+                    <input id="switch-BD" name="dealTrip" type="radio" value="I" class="switch-input setting" />
+                    <label for="switch-BD" class="switch-label switch-label-BD">Both</label>
+                    <input id="switch-D" name="dealTrip" type="radio" value="Y" class="switch-input setting" />
+                    <label for="switch-D" class="switch-label switch-label-D">Dealer Only</label>
                     <span class="switch-selector"></span>
                 </div>
                 <div class="tripleSwitch">
                     <input id="switch-R" name="ronTrip" type="radio" value="Y" class="switch-input setting" />
                     <label for="switch-R" class="switch-label switch-labelswitch-R">Ron Only</label>
-                    <input id="switch-BR" name="ronTrip" type="radio" value="I" class="switch-input setting" checked />
+                    <input id="switch-BR" name="ronTrip" type="radio" value="I" class="switch-input setting" />
                     <label for="switch-BR" class="switch-label switch-label-BR">Both</label>
                     <input id="switch-T" name="ronTrip" type="radio" value="N" class="switch-input setting" />
                     <label for="switch-T" class="switch-label switch-label-T">Tsumo Only</label>
@@ -85,20 +85,36 @@
             </div>
             <div id="switches">
                 <div>
+                    <div class="settingPanel">
+                        <label class="toggle">
+                            <input type="checkbox" class="setting" id="ms-random"/>
+                            <span class="slider"></span>
+                        </label>
+                        <p>Random order</p>
+                    </div>
                     <div class="settingPanel nonrev">
                         <label class="toggle">
-                            <input type="checkbox" class="setting" id="ms-weighted" checked/>
+                            <input type="checkbox" class="setting" id="ms-weighted"/>
                             <span class="slider"></span>
                         </label>
                         <p>Weight odds</p> 
                     </div>
                     <div class="settingPanel nonrev">
                         <label class="toggle">
-                            <input type="checkbox" class="setting" id="ms-random" checked/>
+                            <input type="checkbox" class="setting" id="ms-autocheck"/>
                             <span class="slider"></span>
                         </label>
-                        <p>Random order</p>
+                        <p>Autocheck</p>
                     </div>
+                    <div class="settingPanel nonrev">
+                        <label class="toggle">
+                            <input type="checkbox" class="setting" id="ms-kiriage"/>
+                            <span class="slider"></span>
+                        </label>
+                        <p>Kiriage</p>
+                    </div>
+                </div>
+                <div>
                     <div class="settingPanel nonrev">
                         <label class="toggle">
                             <input type="checkbox" class="setting" id="ms-base"/>
@@ -113,23 +129,7 @@
                         </label>
                         <p>Shorthand</p>
                     </div>
-                </div>
-                <div>
-                    <div class="settingPanel nonrev">
-                        <label class="toggle">
-                            <input type="checkbox" class="setting" id="ms-kiriage"/>
-                            <span class="slider"></span>
-                        </label>
-                        <p>Kiriage</p>
-                    </div>
-                    <div class="settingPanel nonrev">
-                        <label class="toggle">
-                            <input type="checkbox" class="setting" id="ms-autocheck"/>
-                            <span class="slider"></span>
-                        </label>
-                        <p>Autocheck</p>
-                    </div>
-                    <div class="settingPanel nonrev">
+                    <div class="settingPanel nonrev" id="trueRand">
                         <label class="toggle">
                             <input type="checkbox" class="setting" id="ms-trueRand"/>
                             <span class="slider"></span>
@@ -157,8 +157,8 @@
                 <h2 id="fuText">Fu</h2>
             </div>
             <div id="dealrow">
-                <div class="flagBox" id="dealFlag"><p>Dealer</p></div>
                 <div class="flagBox" id="nonFlag"><p>Non-Dealer</p></div>
+                <div class="flagBox" id="dealFlag"><p>Dealer</p></div>
             </div>
             <div id="tsumorow">
                 <div class="flagBox" id="ronFlag"><p>Ron</p></div>
