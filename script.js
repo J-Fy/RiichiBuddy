@@ -70,12 +70,14 @@ const impossibleValues = [
     [2,25,true], 
 ];
 
-//The four primary hint variables and the list that will store all hints generated
+//The four primary hint variables
 var han;
 var fu;
 var dealer;
 var tsumo;
+//List that will hold the hints
 let hintList = [];
+//Variables holding the answers
 var base;
 var answer1;
 var answer2;
@@ -89,14 +91,16 @@ const nonFlag = document.getElementById("nonFlag");
 const tsumoFlag = document.getElementById("tsumoFlag");
 const ronFlag = document.getElementById("ronFlag");
 
-//Flag used so dealer pay amount box only animates once
+//Flag is true while UI is animating the hints
 var settingHints;
 
 //Scoreboxes
 let box2Enabled = false;
 let selectedBox = 1;
 const ansBox1 = document.getElementById("box1");
+const box1caption = document.getElementById("cap1");
 const ansBox2 = document.getElementById("box2");
+const box2caption = document.getElementById("cap2");
 
 //Dialogs
 //failed guess popup
@@ -141,6 +145,7 @@ var digitLimit; //Number of digits allowed in answerboxes, 5 (default) or 3 (sho
 var hList; //Active han list (unweighted or weighted)
 var fList; //Active fu list (unweighted or weighted)
 
+//Settings elements
 const minHanSlider = document.getElementById('minHanSlider');
 const minHanLabel = document.getElementById('minHanLabel');
 const maxHanLabel = document.getElementById('maxHanLabel');
@@ -154,6 +159,7 @@ const maxFuLabel = document.getElementById('maxFuLabel');
 const dealOnlySwitch = document.getElementById('switch-D');
 const dealBothSwitch = document.getElementById('switch-BD');
 const nonOnlySwitch = document.getElementById('switch-N');
+
 const ronOnlySwitch = document.getElementById('switch-R');
 const ronBothSwitch = document.getElementById('switch-BR');
 const tsumoOnlySwitch = document.getElementById('switch-T');
@@ -346,7 +352,7 @@ function newHint() {
     } else {
         nextListHint();
     };
-    [answer1, answer2] = calcAnswer();
+    [answer1, answer2] = calcAnswer(han,fu);
     console.log(answer1)
     console.log(answer2)
     loadHint();
@@ -406,7 +412,8 @@ function nextListHint() {
     iHint ++;
 };
 
-function calcAnswer() {
+//Accepts han & fu, returns player pay amt and dealer pay amt
+function calcAnswer(han,fu) {
     base = 0;
     let pts1 = 0;
     let pts2 = 0;
@@ -464,6 +471,7 @@ function calcAnswer() {
         pts2 = Math.ceil(pts2 / 100) * 100;
     };
     if (shorthandMode) {
+        //remove extra zeroes
         pts1 = chop(pts1);
         if (pts2 > 0) {
             pts2 = chop(pts2);
@@ -484,13 +492,15 @@ function loadHint(){
     selectedBox = 1;
     ansBox1.textContent = "";
     ansBox2.textContent = "";
+    // box1caption.textContent = "";
+    box2caption.textContent = "";
     settingHints = true;
 
     //grey out box 2
     if (dealer || !tsumo || baseMode){
         ansBox2.style.borderColor = "rgb(44, 44, 44)";
         box2Enabled = false;
-        
+        box2caption.textContent = '';
     } else {
         box2Enabled = true;
         ansBox2.style.borderColor = 'ButtonBorder';
@@ -554,9 +564,9 @@ function loadHint(){
         timeout += 200;
     };
 
-    if (reverseMode) {
+    // if (reverseMode) {
         timeout = populateScoreBoxes(timeout);
-    };
+    // };
 
     setTimeout(()=> {
         toggleLitScore()
@@ -567,14 +577,30 @@ function loadHint(){
 
 function populateScoreBoxes(t) {
     setTimeout(()=> {
-        ansBox1.textContent = answer1;
+        if (reverseMode) {
+            ansBox1.textContent = answer1;
+        };
+        if (!tsumo) {
+            box1caption.textContent = 'Player pays';
+        } else {
+            if (dealer) {
+                box1caption.textContent = 'All pay';
+            } else {
+                box1caption.textContent = 'Players pay';
+            };
+        };
         animateCSS(ansBox1, 'pulse','0.5s');
+        animateCSS(box1caption, 'pulse','0.5s');
     }, t);
     t += 200;
     if (box2Enabled) {
         setTimeout(()=> {
-            ansBox2.textContent = answer2;
+            if (reverseMode) {
+                ansBox2.textContent = answer2;
+            };
+            box2caption.textContent = 'Dealer pays';
             animateCSS(ansBox2, 'pulse','0.5s');
+            animateCSS(box2caption, 'pulse','0.5s');
         }, t);
         t += 200;
     };
@@ -585,15 +611,10 @@ function toggleLitScore(){
     if (selectedBox == 1) {
         if (!reverseMode) {
             ansBox1.style.borderColor = 'gainsboro';
-            animateCSS(ansBox1, 'pulse','0.5s');
-            if (box2Enabled){
+            if (box2Enabled) {
                 ansBox2.style.borderColor = 'buttonborder';
-                if (settingHints) {
-                    setTimeout(()=> {
-                        animateCSS(ansBox2, 'pulse','0.5s');
-                    }, 200);
-                };
-            };
+            }
+            animateCSS(ansBox1, 'pulse','0.5s');
         } else {
             hanBox.style.borderColor = 'gainsboro';
             fuBox.style.borderColor = 'buttonborder';
@@ -652,10 +673,20 @@ document.addEventListener("keyup", (e) => {
     var scoreBox;
     if (selectedBox == 1) {
         scoreBox = reverseMode ? hanBox : ansBox1;
-        digitLimit = reverseMode ? 1 : String(answer1).length;
+        if (reverseMode) {
+            digitLimit = 1
+        }
+        if (autocheckMode) {
+            String(answer1).length
+        }
     } else {
         scoreBox = reverseMode ? fuBox : ansBox2;
-        digitLimit = reverseMode ? 2 : String(answer2).length;
+        if (reverseMode) {
+            digitLimit = 2
+        }
+        if (autocheckMode) {
+            String(answer2).length
+        }
     };
 
     let pressedKey = String(e.key);
@@ -767,9 +798,7 @@ function checkGuess() {
         guess1 = ansBox1.textContent;
         guess2 = ansBox2.textContent;
     } else {
-        han = Number(hanBox.textContent);
-        fu = Number(fuBox.textContent);
-        [guess1, guess2] = calcAnswer();
+        [guess1, guess2] = calcAnswer(Number(hanBox.textContent),Number(fuBox.textContent));
     };
     if (guess1 == ""){
         selectedBox = 1;

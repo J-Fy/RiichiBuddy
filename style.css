@@ -179,12 +179,15 @@ button {
     justify-content: center;
 }
 
+.scoreBtns {
+    margin-right: .3rem;
+}
+
 #box1{
     border: 2px solid buttonborder;
     border-radius: 1rem;
     height: 2.5rem;
     width: 6.5rem;
-    margin-left: .5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -195,7 +198,6 @@ button {
     border-radius: 1rem;
     height: 2rem;
     width: 5rem;
-    margin-left: .5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -570,4 +572,13 @@ input[type="range"] {
 
 #trueRand {
     visibility: hidden;
+}
+
+#score h6{
+    font-size: .8rem;
+    margin:0;
+    /* justify-content: center; */
+    text-align: center;
+    /* position: absolute; */
+    height: .8rem;
 }
