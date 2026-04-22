@@ -21,32 +21,39 @@ const fuList = [
 //Lists with duplicates for weighted odds to practice the common values more
 const hanListWeighted = [
     //Basic - Requires Fu
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
-    3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
-    4,4,4,4,4,4,4,4,4,4,4,4,4,4,
-    //Mangan
-    5,5,5,5,5,5,
-    //Haneman
-    6,6,
-    7,7,
-    //Baiman
+    1,1,1,1,1,1,1,1,1,1,1,1,1,                   //13%
+    2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,       //19%
+    3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, //21%
+    4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,       //19%
+    //Mangan 13%
+    5,5,5,5,5,5,5,5,5,5,5,5,5,
+    //Haneman 9%
+    6,6,6,6,6,6, //6%
+    7,7,7,       //3%
+    //Baiman 3%
     8,
     9,
     10,
-    //Sanbaiman
+    //Sanbaiman 2%
     11,
     12,
-    //Yakuman
+    //Yakuman 1%
     13
 ];
 const fuListWeighted = [
-    20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
-    25,25,25,25,25,25, 
-    30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,
-    40,40,40,40,40,40,40,40,
-    50,
-    60,
+    //Common 91%
+        //12%
+    20,20,20,20,20,20,20,20,20,20,20,20,
+        //5%
+    25,25,25,25,25,
+        //47%
+    30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,
+        //26%
+    40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,
+    //Uncommon 5%
+    50,50,50,
+    60,60,
+    //Rare 5%
     70,
     80,
     90,
@@ -107,6 +114,13 @@ const box2caption = document.getElementById("cap2");
 const popup = document.getElementById("incorrectPopup");
 const popupCloseBtn = document.getElementById("closePopup");
 popupCloseBtn.addEventListener('click', newHint);
+
+//Table icon - score table 
+const tableBtn = document.getElementById("tableIcon");
+const tableDialog = document.getElementById("table");
+const tableCloseBtn = document.getElementById("closeTable")
+tableBtn.addEventListener('click', () => tableDialog.showModal());
+tableCloseBtn.addEventListener('click', () => tableDialog.close());
 
 //Gear icon - settings
 const settingsBtn = document.getElementById("settingsIcon");
@@ -353,8 +367,6 @@ function newHint() {
         nextListHint();
     };
     [answer1, answer2] = calcAnswer(han,fu);
-    console.log(answer1)
-    console.log(answer2)
     loadHint();
 };
 
@@ -417,8 +429,6 @@ function calcAnswer(han,fu) {
     base = 0;
     let pts1 = 0;
     let pts2 = 0;
-    console.log(han)
-    console.log(fu)
     switch (han) {
         case 1:
         case 2:
