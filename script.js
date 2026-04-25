@@ -61,20 +61,21 @@ const fuListWeighted = [
     110
 ];
 
-//Impossible values array contains mini arrays of [Han,Fu,Tsumo]
+//Impossible values array contains mini arrays of [Han,Fu,Dealer,Tsumo]
+//Dealer flag is null because it doesn't affect possibility, we will skip that element when checking
 const impossibleValues = [
     //Pinfu tsumo (the only source of 20 fu) is 2 han 
-    [1,20,true],
+    [1,20,null,true],
     //20 Fu not possible with ron
-    [1,20,false],
-    [2,20,false],
-    [3,20,false],
-    [4,20,false],
+    [1,20,null,false],
+    [2,20,null,false],
+    [3,20,null,false],
+    [4,20,null,false],
     //Chiitoitsu (the only source of 25 fu) is 2 han 
-    [1,25,true],
-    [1,25,false],
+    [1,25,null,true],
+    [1,25,null,false],
     //And chiitoitsu tsumo would be 3 han 
-    [2,25,true], 
+    [2,25,null,true]
 ];
 
 //The four primary hint variables
@@ -328,6 +329,7 @@ function generateHintList(){
     if (randomMode) {
         shuffle(hintList);
     };
+    console.log(hintList);
 };
 
 function generateHints() {
@@ -670,18 +672,21 @@ function toggleLitScore(){
 };
     
 function checkImpossible(arr) {
-    for (let i = 0; i < impossibleValues.length; i++) {
-        for (let x = 0; x < 3; x++){
+    for (let i = 0; i < impossibleValues.length; i++) { //Loop through each impossible combo
+        for (let x = 0; x < 4; x++){ //Loop through each element [Han,Fu,Dealer,Tsumo] and compare
+            if (x == 2) { //Skip the dealer flag
+                x++;
+            };
             if (arr[x] == impossibleValues[i][x]){
-                if (x == 2){
+                if (x == 3){ //If all pieces matched, return true, meaning it is impossible
                     return true;
                 };
             } else {
                 break;
             };
-            
         };
     };
+    //If all elements were checked and none matched, the value is possible
     return false;
 };
 
@@ -832,18 +837,22 @@ function checkGuess() {
         guess1 = ansBox1.textContent;
         guess2 = ansBox2.textContent;
     } else {
-        [guess1, guess2] = calcAnswer(Number(hanBox.textContent),Number(fuBox.textContent));
+        guess1 = hanBox.textContent;
+        guess2 = fuBox.textContent;
     };
     if (guess1 == ""){
         selectedBox = 1;
         toggleLitScore();
         return;
     } else {
-        if (box2Enabled && guess2 == "" && !autocheckMode){
+        if ((box2Enabled || reverseMode) && guess2 == "" && !autocheckMode){
             selectedBox = 2;
             toggleLitScore();
             return;
         };
+    };
+    if (reverseMode) {
+        [guess1, guess2] = calcAnswer(Number(hanBox.textContent),Number(fuBox.textContent));
     };
     
     let correct = true;
