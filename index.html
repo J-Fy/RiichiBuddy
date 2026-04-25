@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Riichi Mahjong score trainer to memorize the score table">
+    <meta name="keywords" content="Riichi, Mahjong, Riichi Mahjong, Japanese Mahjong, Score Trainer, Tester, Game, Memorization">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riichi Buddy</title>
     <link rel="icon" href="images/chun.svg"/>
@@ -28,221 +30,223 @@
     </div>
     <dialog class="dialogs" id="table">
         <div class="dialogContent" id="tableContent">
-            <table cellspacing="0" dir="ltr" border="1">
-                <thead>
-                    <tr class="tblHead">
-                    <th id="THhanfu" colspan="4">Han/Fu</th>
-                    <th id="THnd" colspan="2">Non-dealer</th>
-                    <th id="THd" colspan="2">Dealer</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="tblHead">
-                    <th class="hfth">1</th>
-                    <th class="hfth">2</th>
-                    <th class="hfth">3</th>
-                    <th class="hfth">4</th>
-                    <th>Ron</th>
-                    <th rowspan="1" colspan="2" id="tblHeadTsumo">Tsumo</th>
-                    <th>Ron</th>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd">30</td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="rptd">1000</td>
-                    <td class="tptd">300</td>
-                    <td class="tptd">500</td>
-                    <td class="rptd">1500</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd">40</td>
-                    <td class="hftd">20</td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="rptd">1300</td>
-                    <td class="tptd">400</td>
-                    <td class="tptd">700</td>
-                    <td class="rptd">2000</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd">50</td>
-                    <td class="hftd">25</td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="rptd">1600</td>
-                    <td class="tptd">400</td>
-                    <td class="tptd">800</td>
-                    <td class="rptd">2400</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd">60</td>
-                    <td class="hftd">30</td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="rptd">2000</td>
-                    <td class="tptd">500</td>
-                    <td class="tptd">1000</td>
-                    <td class="rptd">2900</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd">70</td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="rptd">2300</td>
-                    <td class="tptd">600</td>
-                    <td class="tptd">1200</td>
-                    <td class="rptd">3400</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd">80</td>
-                    <td class="hftd">40</td>
-                    <td class="hftd">20</td>
-                    <td class="hftd"></td>
-                    <td class="rptd">2600</td>
-                    <td class="tptd">700</td>
-                    <td class="tptd">1300</td>
-                    <td class="rptd">3900</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd">90</td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="rptd">2900</td>
-                    <td class="tptd">800</td>
-                    <td class="tptd">1500</td>
-                    <td class="rptd">4400</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd">100</td>
-                    <td class="hftd">50</td>
-                    <td class="hftd">25</td>
-                    <td class="hftd"></td>
-                    <td class="rptd">3200</td>
-                    <td class="tptd">800</td>
-                    <td class="tptd">1600</td>
-                    <td class="rptd">4800</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd">110</td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="rptd">3600</td>
-                    <td class="tptd">900</td>
-                    <td class="tptd">1800</td>
-                    <td class="rptd">5300</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd"></td>
-                    <td class="hftd">60</td>
-                    <td class="hftd">30</td>
-                    <td class="hftd"></td>
-                    <td class="rptd">3900</td>
-                    <td class="tptd">1000</td>
-                    <td class="tptd">2000</td>
-                    <td class="rptd">5800</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd"></td>
-                    <td class="hftd">70</td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="rptd">4500</td>
-                    <td class="tptd">1200</td>
-                    <td class="tptd">2300</td>
-                    <td class="rptd">6800</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd"></td>
-                    <td class="hftd">80</td>
-                    <td class="hftd">40</td>
-                    <td class="hftd">20</td>
-                    <td class="rptd">5200</td>
-                    <td class="tptd">1300</td>
-                    <td class="tptd">2600</td>
-                    <td class="rptd">7700</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd"></td>
-                    <td class="hftd">90</td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="rptd">5800</td>
-                    <td class="tptd">1500</td>
-                    <td class="tptd">2900</td>
-                    <td class="rptd">8700</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd"></td>
-                    <td class="hftd">100</td>
-                    <td class="hftd">50</td>
-                    <td class="hftd">25</td>
-                    <td class="rptd">6400</td>
-                    <td class="tptd">1600</td>
-                    <td class="tptd">3200</td>
-                    <td class="rptd">9600</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd"></td>
-                    <td class="hftd">110</td>
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="rptd">7100</td>
-                    <td class="tptd">1800</td>
-                    <td class="tptd">3600</td>
-                    <td class="rptd">10600</td>
-                    </tr>
-                    <tr class="hfrow">
-                    <td class="hftd"></td>
-                    <td class="hftd"></td>
-                    <td class="hftd">60*</td>
-                    <td class="hftd">30*</td>
-                    <td class="rptd">7700</td>
-                    <td class="tptd">2000</td>
-                    <td class="tptd">3900</td>
-                    <td class="rptd">11600</td>
-                    </tr>
-                    <tr id="manganRow">
-                    <th rowspan="1" colspan="4">Mangan (5,6)</th>
-                    <td class="rptd">8000</td>
-                    <td class="tptd">2000</td>
-                    <td class="tptd">4000</td>
-                    <td class="rptd">12000</td>
-                    </tr>
-                    <tr id="hanemanRow">
-                    <th rowspan="1" colspan="4">Haneman (6,7)</th>
-                    <td class="rptd">12000</td>
-                    <td class="tptd">3000</td>
-                    <td class="tptd">6000</td>
-                    <td class="rptd">18000</td>
-                    </tr>
-                    <tr id="baimanRow">
-                    <th rowspan="1" colspan="4">Baiman (8,9,10)</th>
-                    <td class="rptd">16000</td>
-                    <td class="tptd">4000</td>
-                    <td class="tptd">8000</td>
-                    <td class="rptd">24000</td>
-                    </tr>
-                    <tr id="sanbaimanRow">
-                    <th rowspan="1" colspan="4">Sanbaiman (11,12)</th>
-                    <td class="rptd">24000</td>
-                    <td class="tptd">6000</td>
-                    <td class="tptd">12000</td>
-                    <td class="rptd">36000</td>
-                    </tr>
-                    <tr id="yakumanRow">
-                    <th rowspan="1" colspan="4">Yakuman (13)</th>
-                    <td class="rptd">32000</td>
-                    <td class="tptd">8000</td>
-                    <td class="tptd">16000</td>
-                    <td class="rptd">48000</td>
-                    </tr>
-                </tbody>
-                </table>
+            <div id="tableDiv">
+                <table cellspacing="0" dir="ltr" border="1">
+                    <thead>
+                        <tr class="tblHead">
+                        <th id="THhanfu" colspan="4">Han/Fu</th>
+                        <th id="THnd" colspan="2">Non-dealer</th>
+                        <th id="THd" colspan="2">Dealer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="tblHead">
+                        <th class="hfth">1</th>
+                        <th class="hfth">2</th>
+                        <th class="hfth">3</th>
+                        <th class="hfth">4</th>
+                        <th>Ron</th>
+                        <th rowspan="1" colspan="2" id="tblHeadTsumo">Tsumo</th>
+                        <th>Ron</th>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd">30</td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="rptd">1000</td>
+                        <td class="tptd">300</td>
+                        <td class="tptd">500</td>
+                        <td class="rptd">1500</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd">40</td>
+                        <td class="hftd">20</td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="rptd">1300</td>
+                        <td class="tptd">400</td>
+                        <td class="tptd">700</td>
+                        <td class="rptd">2000</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd">50</td>
+                        <td class="hftd">25</td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="rptd">1600</td>
+                        <td class="tptd">400</td>
+                        <td class="tptd">800</td>
+                        <td class="rptd">2400</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd">60</td>
+                        <td class="hftd">30</td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="rptd">2000</td>
+                        <td class="tptd">500</td>
+                        <td class="tptd">1000</td>
+                        <td class="rptd">2900</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd">70</td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="rptd">2300</td>
+                        <td class="tptd">600</td>
+                        <td class="tptd">1200</td>
+                        <td class="rptd">3400</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd">80</td>
+                        <td class="hftd">40</td>
+                        <td class="hftd">20</td>
+                        <td class="hftd"></td>
+                        <td class="rptd">2600</td>
+                        <td class="tptd">700</td>
+                        <td class="tptd">1300</td>
+                        <td class="rptd">3900</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd">90</td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="rptd">2900</td>
+                        <td class="tptd">800</td>
+                        <td class="tptd">1500</td>
+                        <td class="rptd">4400</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd">100</td>
+                        <td class="hftd">50</td>
+                        <td class="hftd">25</td>
+                        <td class="hftd"></td>
+                        <td class="rptd">3200</td>
+                        <td class="tptd">800</td>
+                        <td class="tptd">1600</td>
+                        <td class="rptd">4800</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd">110</td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="rptd">3600</td>
+                        <td class="tptd">900</td>
+                        <td class="tptd">1800</td>
+                        <td class="rptd">5300</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd"></td>
+                        <td class="hftd">60</td>
+                        <td class="hftd">30</td>
+                        <td class="hftd"></td>
+                        <td class="rptd">3900</td>
+                        <td class="tptd">1000</td>
+                        <td class="tptd">2000</td>
+                        <td class="rptd">5800</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd"></td>
+                        <td class="hftd">70</td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="rptd">4500</td>
+                        <td class="tptd">1200</td>
+                        <td class="tptd">2300</td>
+                        <td class="rptd">6800</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd"></td>
+                        <td class="hftd">80</td>
+                        <td class="hftd">40</td>
+                        <td class="hftd">20</td>
+                        <td class="rptd">5200</td>
+                        <td class="tptd">1300</td>
+                        <td class="tptd">2600</td>
+                        <td class="rptd">7700</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd"></td>
+                        <td class="hftd">90</td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="rptd">5800</td>
+                        <td class="tptd">1500</td>
+                        <td class="tptd">2900</td>
+                        <td class="rptd">8700</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd"></td>
+                        <td class="hftd">100</td>
+                        <td class="hftd">50</td>
+                        <td class="hftd">25</td>
+                        <td class="rptd">6400</td>
+                        <td class="tptd">1600</td>
+                        <td class="tptd">3200</td>
+                        <td class="rptd">9600</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd"></td>
+                        <td class="hftd">110</td>
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="rptd">7100</td>
+                        <td class="tptd">1800</td>
+                        <td class="tptd">3600</td>
+                        <td class="rptd">10600</td>
+                        </tr>
+                        <tr class="hfrow">
+                        <td class="hftd"></td>
+                        <td class="hftd"></td>
+                        <td class="hftd">60*</td>
+                        <td class="hftd">30*</td>
+                        <td class="rptd">7700</td>
+                        <td class="tptd">2000</td>
+                        <td class="tptd">3900</td>
+                        <td class="rptd">11600</td>
+                        </tr>
+                        <tr id="manganRow">
+                        <th rowspan="1" colspan="4">Mangan (5,6)</th>
+                        <td class="rptd">8000</td>
+                        <td class="tptd">2000</td>
+                        <td class="tptd">4000</td>
+                        <td class="rptd">12000</td>
+                        </tr>
+                        <tr id="hanemanRow">
+                        <th rowspan="1" colspan="4">Haneman (6,7)</th>
+                        <td class="rptd">12000</td>
+                        <td class="tptd">3000</td>
+                        <td class="tptd">6000</td>
+                        <td class="rptd">18000</td>
+                        </tr>
+                        <tr id="baimanRow">
+                        <th rowspan="1" colspan="4">Baiman (8,9,10)</th>
+                        <td class="rptd">16000</td>
+                        <td class="tptd">4000</td>
+                        <td class="tptd">8000</td>
+                        <td class="rptd">24000</td>
+                        </tr>
+                        <tr id="sanbaimanRow">
+                        <th rowspan="1" colspan="4">Sanbaiman (11,12)</th>
+                        <td class="rptd">24000</td>
+                        <td class="tptd">6000</td>
+                        <td class="tptd">12000</td>
+                        <td class="rptd">36000</td>
+                        </tr>
+                        <tr id="yakumanRow">
+                        <th rowspan="1" colspan="4">Yakuman (13)</th>
+                        <td class="rptd">32000</td>
+                        <td class="tptd">8000</td>
+                        <td class="tptd">16000</td>
+                        <td class="rptd">48000</td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
                 <button class="dialogX" id="closeTable">&times;</button>
         </div>
     </dialog>
@@ -369,8 +373,17 @@
                         <p>Reverse mode</p>
                     </div>
                 </div>
+                <!-- <div id="settingsHelpOverlay">
+                    <h3>Toggles</h3>
+                    <li><b>Random Order:</b> uncheck this for questions to follow the table order </li>
+                    <li><b>Weight odds:</b></li>
+                    <li></li>
+                    <li></li>
+                    <p>report issues on <a href="https://github.com/J-Fy/RiichiBuddy/issues">Github</a></p>
+                </div> -->
             </div>
             <button class="dialogX" id="closeSettings">&times;</button>
+            <i id="settingsHelp" class="fa fa-question-circle-o"></i>
         </div>
     </dialog>
     <div id="content">

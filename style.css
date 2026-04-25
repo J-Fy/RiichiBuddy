@@ -1,6 +1,6 @@
 /* Some defaults */
 :root {
-  --settingsColor: #405e74;
+  --settingsColor: #2d4455;
   --tblPts: rgb(0, 109, 109);
   --tblH5plus: chocolate;
   --tblHead: #243849;
@@ -70,7 +70,7 @@ body{
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 100vh;
+    height: 100dvh;
     width: auto;
 }
 
@@ -78,6 +78,10 @@ body{
 #score, #hints, #keyboard {
     scale: 1.2;
     margin-top: 2.5rem;
+}
+
+#hints {
+    margin-top: 0;
 }
 
 .dialogs{
@@ -105,9 +109,17 @@ body{
 }
 
 #tableContent{
-    height: 35.5rem;
-    width: 20rem;
+    height: 80vh;
+    max-height: 35.5rem;
+    width: 21rem;
     scale: .9;
+}
+
+#tableDiv{
+    height: 80vh;
+    max-height: 35.5rem;
+    overflow: auto;
+    overflow-x: hidden;
 }
 
 td {
@@ -141,6 +153,22 @@ td {
     justify-content: center;
     box-shadow: .2rem .2rem black;
 }
+
+#settingsHelp {
+    position: absolute;
+    font-size: 1.5rem;
+    top: .5rem;
+    left: .5rem;
+    visibility: hidden;
+
+    &:hover{
+        color: darkgray;
+    }
+}
+
+/* #settingsHelpOverlay {
+
+} */
 
 .donate{
     margin: 1rem;
@@ -184,7 +212,6 @@ td {
         scale: .8;
     }
 }
-
 
 button {
     font-family: sans-serif;

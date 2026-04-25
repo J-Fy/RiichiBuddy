@@ -128,6 +128,8 @@ const settingsDialog = document.getElementById("settings");
 const settingsCloseBtn = document.getElementById("closeSettings");
 settingsBtn.addEventListener('click', openSettings);
 settingsCloseBtn.addEventListener('click', closeSettings);
+const settingsHelp = document.getElementById("settingsHelp");
+settingsHelp.addEventListener('click', toggleSettingsHelp);
 
 //Heart icon - donate dialog
 const heartBtn = document.getElementById("heartIcon");
@@ -233,6 +235,7 @@ function startGame(){
     nonDealerEnabled = !dealOnlySwitch.checked;
     ronEnabled = !tsumoOnlySwitch.checked;
     tsumoEnabled = !ronOnlySwitch.checked;
+
     if (reverseMode) {
         minHan = hanList[0];
         maxHan = hanList[3];
@@ -253,10 +256,25 @@ function startGame(){
             maxFu = fuList[maxFuSlider.value];
         };
     };
-    if (baseMode || reverseMode || (!tsumoEnabled && !nonDealerEnabled)) {
+    if (baseMode || !tsumoEnabled || !nonDealerEnabled) {
         ansBox2.style.display = "none";
     } else {
         ansBox2.style.display = "";
+    };
+    if (baseMode) {
+        nonFlag.classList.add('dimmed')
+        dealFlag.classList.add('dimmed')
+        ronFlag.classList.add('dimmed')
+        tsumoFlag.classList.add('dimmed')
+        ronFlag.classList.remove('tsumoLit');
+        tsumoFlag.classList.remove('tsumoLit');
+        nonFlag.classList.remove('dealLit');
+        dealFlag.classList.remove('dealLit');
+    } else {
+        nonFlag.classList.remove('dimmed')
+        dealFlag.classList.remove('dimmed')
+        ronFlag.classList.remove('dimmed')
+        tsumoFlag.classList.remove('dimmed')
     };
     if (shorthandMode) {
         digitLimit = 3;
@@ -321,7 +339,7 @@ function generateHints() {
             hint = [han,fu,false,false];
             addHint(hint);
         };
-        if (ronEnabled && dealerEnabled) {
+        if (tsumoEnabled && nonDealerEnabled) {
             hint = [han,fu,false,true];
             addHint(hint);
         };
@@ -329,7 +347,7 @@ function generateHints() {
             hint = [han,fu,true,true];
             addHint(hint);
         };
-        if (tsumoEnabled && nonDealerEnabled) {
+        if (ronEnabled && dealerEnabled) {
             hint = [han,fu,true,false];
             addHint(hint);
         };
@@ -590,13 +608,17 @@ function populateScoreBoxes(t) {
         if (reverseMode) {
             ansBox1.textContent = answer1;
         };
-        if (!tsumo) {
-            box1caption.textContent = 'Player pays';
+        if (baseMode) {
+            box1caption.textContent = 'Base value';
         } else {
-            if (dealer) {
-                box1caption.textContent = 'All pay';
+            if (!tsumo) {
+                box1caption.textContent = 'Player pays';
             } else {
-                box1caption.textContent = 'Players pay';
+                if (dealer) {
+                    box1caption.textContent = 'All pay';
+                } else {
+                    box1caption.textContent = 'Players pay';
+                };
             };
         };
         animateCSS(ansBox1, 'pulse','0.5s');
@@ -917,6 +939,10 @@ function closeSettings() {
     };
 };
 
+function toggleSettingsHelp() {
+    
+}
+
 //Sliders Code
 function controlSlider(max, minSlider, maxSlider, Label, labelList) {
     settingsChanged = true;
@@ -1013,6 +1039,18 @@ trueRandomSwitch.oninput = () => {
         randomSwitch.checked = true;
     };
 };
+
+// //Disable list mode for weighted odds
+// weightedSwitch.oninput = () => {
+//     if (weightedSwitch.checked) {
+//         randomSwitch.checked = true;
+//     };
+// };
+// randomSwitch.oninput = () => {
+//     if (!randomSwitch.checked) {
+//         weightedSwitch.checked = false;
+//     };
+// };
 
 
 
