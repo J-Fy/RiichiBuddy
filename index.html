@@ -6,7 +6,12 @@
     <meta name="description" content="Riichi Mahjong score trainer to memorize the score table">
     <meta name="keywords" content="Riichi, Mahjong, Riichi Mahjong, Japanese Mahjong, Score Trainer, Tester, Game, Memorization">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riichi Buddy</title>
+    <meta property="og:title" content="Riichi Score Table Trainer" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://riichiScoreTrainer.com" />
+    <meta property="og:image" content="https://riichiScoreTrainer/images/embedLogo.png" />
+    <meta property="og:description" content="Test how well you know the Riichi mahjong score table!" />
+    <title>Riichi Score Trainer</title>
     <link rel="icon" href="images/chun.svg"/>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
@@ -373,14 +378,24 @@
                         <p>Reverse mode</p>
                     </div>
                 </div>
-                <!-- <div id="settingsHelpOverlay">
-                    <h3>Toggles</h3>
-                    <li><b>Random Order:</b> uncheck this for questions to follow the table order </li>
-                    <li><b>Weight odds:</b></li>
-                    <li></li>
-                    <li></li>
-                    <p>report issues on <a href="https://github.com/J-Fy/RiichiBuddy/issues">Github</a></p>
-                </div> -->
+            </div>
+            <div id="settingsHelpOverlay">
+                <div id="filtersTxt">
+                    <h3><b>Filters</b></h3>
+                    <p><b>Han & Fu sliders: </b>Limit the minimum and maximum han & fu of questions</p>
+                    <p><b>Non-dealer / Dealer: </b>Set to one or the other or both</p>
+                </div>
+                <div>
+                    <h3><b>Toggles</b></h3>
+                    <p><b>Random Order: </b>Turn this off for questions to follow the table order</p>
+                    <p><b>Weight odds: </b>Common han/fu values appear more frequently</p>
+                    <p><b>Autocheck: </b>Answers are checked without hitting enter, make no mistakes!</p>
+                    <p><b>Kiriage: </b>4han30 and 3han60 are Mangan</p>
+                    <p><b>Base points: </b>Enter the base amount (Fu x 2<sup>(2 + Han)</sup>)</p>
+                    <p><b>Shorthand: </b>Enter scores without the last two zeroes</p>
+                    <p><b>Reverse Mode: </b>See a score and enter the han & fu that yield it. Limited to 1-4 han 20-50 fu</p>
+                </div>
+                <p>report bugs on <a href="https://github.com/J-Fy/RiichiBuddy/issues">Github</a></p>
             </div>
             <button class="dialogX" id="closeSettings">&times;</button>
             <i id="settingsHelp" class="fa fa-question-circle-o"></i>

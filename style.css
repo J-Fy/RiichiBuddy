@@ -152,6 +152,7 @@ td {
     align-items: center;
     justify-content: center;
     box-shadow: .2rem .2rem black;
+    z-index: 4;
 }
 
 #settingsHelp {
@@ -159,16 +160,47 @@ td {
     font-size: 1.5rem;
     top: .5rem;
     left: .5rem;
-    visibility: hidden;
+    z-index: 4;
 
     &:hover{
         color: darkgray;
     }
 }
 
-/* #settingsHelpOverlay {
+#settingsHelpOverlay {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 26rem;
+    border-radius: .5rem;
+    font-size: .7rem;
+    align-items: left;
+    background-color: #000000ef;
+    position: absolute;
+    top:0;
+    left: 0;
+    padding: 1rem;
+    z-index: 3;
+    opacity: 0;
+    visibility: hidden;
+    /* text-align: left; */
+    transition: all 300ms;
+}
 
-} */
+#settingsHelpOverlay h3{
+    margin: .1rem;
+    margin-top: .5rem;
+}
+
+#settingsHelpOverlay p{
+    margin-top: .2rem;
+}
+
+#filtersTxt {
+    margin-top: 1.5rem;
+}
+
 
 .donate{
     margin: 1rem;

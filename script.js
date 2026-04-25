@@ -130,6 +130,8 @@ settingsBtn.addEventListener('click', openSettings);
 settingsCloseBtn.addEventListener('click', closeSettings);
 const settingsHelp = document.getElementById("settingsHelp");
 settingsHelp.addEventListener('click', toggleSettingsHelp);
+const settingsHelpOv = document.getElementById("settingsHelpOverlay");
+    
 
 //Heart icon - donate dialog
 const heartBtn = document.getElementById("heartIcon");
@@ -940,8 +942,15 @@ function closeSettings() {
 };
 
 function toggleSettingsHelp() {
-    
-}
+    // console.log()
+    if (settingsHelpOv.style.visibility == "hidden") {
+        settingsHelpOv.style.visibility = "visible";
+        settingsHelpOv.style.opacity = "95";
+    } else {
+        settingsHelpOv.style.opacity = "0";
+        settingsHelpOv.style.visibility = "hidden";
+    };
+};
 
 //Sliders Code
 function controlSlider(max, minSlider, maxSlider, Label, labelList) {
@@ -1071,6 +1080,7 @@ trueRandomSwitch.checked = false;
 dealBothSwitch.checked = true;
 ronBothSwitch.checked = true;
 settingsChanged = true;
+settingsHelpOv.style.visibility = "hidden";
 fillSlider(minHanSlider, maxHanSlider, maxHanSlider);
 fillSlider(minFuSlider, maxFuSlider, maxFuSlider);
 console.log("Please don't judge my code. I'm a mainframe dev not a web dev lol");
