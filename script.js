@@ -965,7 +965,6 @@ function toggleSettingsHelp() {
 function controlSlider(max, minSlider, maxSlider, Label, labelList) {
     settingsChanged = true;
     const [from, to] = getParsed(minSlider, maxSlider);
-    fillSlider(minSlider, maxSlider, maxSlider);
     if (max) {
         if (from <= to) {
             maxSlider.value = to;
@@ -985,6 +984,7 @@ function controlSlider(max, minSlider, maxSlider, Label, labelList) {
             Label.textContent = labelList[from];
         };
     };
+    fillSlider(minSlider, maxSlider, maxSlider);
 };
 
 function setToggleAccessible(currSlider, otherSlider) {
@@ -1000,6 +1000,7 @@ function getParsed(currentFrom, currentTo) {
   const to = parseInt(currentTo.value, 10);
   return [from, to];
 };
+
 function fillSlider(from, to, controlSlider) {
     const rangeDistance = to.max-to.min;
     const fromPosition = from.value - to.min;
@@ -1052,11 +1053,11 @@ baseSwitch.oninput = () => {
 }
 
 //TrueRandom cannot be enabled without Random enabled also
-trueRandomSwitch.oninput = () => {
-    if (trueRandomSwitch.checked) {
-        randomSwitch.checked = true;
-    };
-};
+// trueRandomSwitch.oninput = () => {
+//     if (trueRandomSwitch.checked) {
+//         randomSwitch.checked = true;
+//     };
+// };
 
 // //Disable list mode for weighted odds
 // weightedSwitch.oninput = () => {
@@ -1074,23 +1075,32 @@ trueRandomSwitch.oninput = () => {
 
 
 //Establish default settings (I'm doing this twice because firefox saves var values between reloads)
-minHanSlider.value = 0;
-maxHanSlider.value = 12;
-minFuSlider.value = 0;
-maxFuSlider.value = 10;
-weightedSwitch.checked = true;
-randomSwitch.checked = true;
-baseSwitch.checked = false;
-shorthandSwitch.checked = false;
-kiriageSwitch.checked = false;
-autocheckSwitch.checked = false;
-reverseSwitch.checked = false;
-trueRandomSwitch.checked = false;
-dealBothSwitch.checked = true;
-ronBothSwitch.checked = true;
-settingsChanged = true;
+// settingsDialog.showModal();
+// minHanSlider.value = 0;
+// maxHanSlider.value = 12;
+// minFuSlider.value = 0;
+// maxFuSlider.value = 10;
+// weightedSwitch.checked = true;
+// randomSwitch.checked = true;
+// baseSwitch.checked = false;
+// shorthandSwitch.checked = false;
+// kiriageSwitch.checked = false;
+// autocheckSwitch.checked = false;
+// reverseSwitch.checked = false;
+// trueRandomSwitch.checked = false;
+// dealBothSwitch.checked = true;
+// ronBothSwitch.checked = true;
+// settingsChanged = true;
 settingsHelpOv.style.visibility = "hidden";
-fillSlider(minHanSlider, maxHanSlider, maxHanSlider);
-fillSlider(minFuSlider, maxFuSlider, maxFuSlider);
+controlSlider(false, minHanSlider, maxHanSlider, minHanLabel, hanList);
+if (hanList[minHanSlider.value] > 4) {
+    document.getElementById('fuRange').classList.add('dimmed');
+} else {
+    if (!reverseSwitch.checked)
+    document.getElementById('fuRange').classList.remove('dimmed');
+};
+controlSlider(true, minHanSlider, maxHanSlider, maxHanLabel, hanList);
+controlSlider(false, minFuSlider, maxFuSlider, minFuLabel, fuList);
+controlSlider(true, minFuSlider, maxFuSlider, maxFuLabel, fuList);
 console.log("Please don't judge my code. I'm a mainframe dev not a web dev lol");
 startGame();

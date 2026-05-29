@@ -109,18 +109,18 @@ body{
 }
 
 #tableContent{
-    height: 80vh;
-    max-height: 35.5rem;
-    width: 21rem;
-    scale: .9;
+    width: 18.5rem;
+    height: 31.5rem;
+    /* max-height: 31.5rem; */
+    /* max-width: 18.5rem; */
+    font-size: .85rem;
 }
 
-#tableDiv{
-    height: 80vh;
-    max-height: 35.5rem;
+/* #tableDiv{
+    max-height: 100%;
+    max-width: 100%;
     overflow: auto;
-    overflow-x: hidden;
-}
+} */
 
 td {
     text-align: right;
